@@ -4,7 +4,925 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Stark Privacy — Sin privacidad tu libertad es solo una ilusión</title>
-  <!-- truncated for tool safety; full content will be handled carefully -->
+  <meta name="description" content="Divulgador de privacidad digital. Fundador de Boring Privacy y privacidad.me. Herramientas, formación y soberanía digital.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080b10;
+      --bg-elevated: #0e131a;
+      --bg-card: #121820;
+      --border: #1c2530;
+      --text: #e8edf4;
+      --text-muted: #8b9bb0;
+      --accent: #3b82f6;
+      --accent-soft: rgba(59, 130, 246, 0.12);
+      --accent-glow: rgba(59, 130, 246, 0.25);
+      --red: #ef4444;
+      --red-soft: rgba(239, 68, 68, 0.12);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --font: 'Inter', system-ui, -apple-system, sans-serif;
+      --mono: 'JetBrains Mono', ui-monospace, monospace;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* Subtle noise texture */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    .container {
+      width: min(1120px, 92%);
+      margin: 0 auto;
+    }
+
+    /* ——— NAV ——— */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(8, 11, 16, 0.82);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s ease;
+    }
+
+    nav.scrolled {
+      border-bottom-color: var(--border);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .logo {
+      font-weight: 600;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo span {
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.75rem;
+      list-style: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .nav-cta {
+      font-size: 0.875rem;
+      font-weight: 550;
+      background: var(--accent);
+      color: #fff;
+      padding: 0.45rem 1rem;
+      border-radius: 999px;
+    }
+
+    .nav-cta:hover {
+      background: #2563eb;
+      transform: translateY(-1px);
+    }
+
+    /* ——— HERO ——— */
+    .hero {
+      padding: 9.5rem 0 5.5rem;
+      position: relative;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .hero-label {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .hero-label::before {
+      content: "";
+      width: 18px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 4.5vw, 3.35rem);
+      font-weight: 700;
+      letter-spacing: -0.035em;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .hero-lead {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 34ch;
+      margin-bottom: 2.25rem;
+      line-height: 1.65;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+      margin-bottom: 2.75rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.35rem;
+      border-radius: 999px;
+      font-weight: 550;
+      font-size: 0.925rem;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: #2563eb;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--bg-elevated);
+      border-color: var(--border);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      border-color: #2a3644;
+      background: var(--bg-card);
+    }
+
+    .social-row {
+      display: flex;
+      gap: 0.65rem;
+    }
+
+    .social-row a {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      display: grid;
+      place-items: center;
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+
+    .social-row a:hover {
+      color: var(--text);
+      border-color: #2a3644;
+      background: var(--bg-card);
+    }
+
+    .hero-visual {
+      position: relative;
+      display: flex;
+      justify-content: center;
+    }
+
+    .avatar-wrap {
+      position: relative;
+      width: 280px;
+      height: 280px;
+    }
+
+    .avatar-wrap::before {
+      content: "";
+      position: absolute;
+      inset: -18px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      opacity: 0.7;
+      z-index: 0;
+    }
+
+    .avatar-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid var(--border);
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.45);
+    }
+
+    .avatar-badge {
+      position: absolute;
+      bottom: 12px;
+      right: 8px;
+      z-index: 2;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      padding: 0.3rem 0.65rem;
+      border-radius: 999px;
+      color: var(--accent);
+      letter-spacing: 0.03em;
+    }
+
+    /* ——— SECTIONS COMMON ——— */
+    section {
+      padding: 5rem 0;
+    }
+
+    .section-header {
+      margin-bottom: 2.75rem;
+    }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 0.65rem;
+    }
+
+    .section-header h2 {
+      font-size: clamp(1.7rem, 3vw, 2.15rem);
+      font-weight: 650;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.6rem;
+    }
+
+    .section-header p {
+      color: var(--text-muted);
+      max-width: 48ch;
+      font-size: 1.05rem;
+    }
+
+    /* ——— DESTACADOS ——— */
+    .destacados {
+      background: linear-gradient(180deg, transparent, rgba(59,130,246,0.03) 40%, transparent);
+    }
+
+    .cards-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.35rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem 1.85rem;
+      transition: border-color 0.25s ease, transform 0.25s ease;
+    }
+
+    .card:hover {
+      border-color: #2a3644;
+      transform: translateY(-2px);
+    }
+
+    .card-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      display: grid;
+      place-items: center;
+      font-size: 1.2rem;
+      margin-bottom: 1.15rem;
+    }
+
+    .card h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.35rem;
+      line-height: 1.55;
+    }
+
+    .card-link {
+      font-size: 0.9rem;
+      font-weight: 550;
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .card-link:hover {
+      gap: 0.55rem;
+    }
+
+    /* ——— SOBRE ——— */
+    .sobre-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 3.5rem;
+      align-items: start;
+    }
+
+    .sobre-text p {
+      color: var(--text-muted);
+      margin-bottom: 1.15rem;
+      font-size: 1.05rem;
+    }
+
+    .sobre-text p strong {
+      color: var(--text);
+      font-weight: 550;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .stat {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1.1rem 1.2rem;
+    }
+
+    .stat-num {
+      font-size: 1.55rem;
+      font-weight: 650;
+      letter-spacing: -0.03em;
+      color: var(--text);
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+    }
+
+    /* ——— CONTENIDO ——— */
+    .contenido-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+
+    .content-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.6rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .content-card .tag {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 0.9rem;
+    }
+
+    .content-card h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 0.55rem;
+    }
+
+    .content-card p {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      flex-grow: 1;
+      margin-bottom: 1.25rem;
+    }
+
+    .content-card .btn {
+      align-self: flex-start;
+      padding: 0.55rem 1.1rem;
+      font-size: 0.875rem;
+    }
+
+    .content-card.newsletter .btn {
+      background: var(--red);
+      color: #fff;
+    }
+
+    .content-card.newsletter .btn:hover {
+      background: #dc2626;
+    }
+
+    /* ——— HERRAMIENTAS ——— */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1rem;
+    }
+
+    .tool {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1.15rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .tool:hover {
+      border-color: #2a3644;
+      background: var(--bg-card);
+    }
+
+    .tool-name {
+      font-weight: 550;
+      font-size: 0.95rem;
+    }
+
+    .tool-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .tool-badge {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      margin-top: 0.35rem;
+    }
+
+    /* ——— CONTACTO ——— */
+    .contacto-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 2.5rem;
+      align-items: center;
+    }
+
+    .contacto-box h2 {
+      font-size: 1.65rem;
+      font-weight: 650;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.75rem;
+    }
+
+    .contacto-box p {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .pgp {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.85rem 1.1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: var(--text-muted);
+    }
+
+    .pgp a {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .pgp a:hover {
+      text-decoration: underline;
+    }
+
+    /* ——— FOOTER ——— */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.75rem 0 2.25rem;
+      margin-top: 2rem;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .footer-copy {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .footer-links a:hover {
+      color: var(--text);
+    }
+
+    /* ——— RESPONSIVE ——— */
+    @media (max-width: 900px) {
+      .hero-grid,
+      .sobre-grid,
+      .contenido-grid,
+      .cards-2,
+      .contacto-box {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 7.5rem;
+      }
+
+      .hero-visual {
+        order: -1;
+      }
+
+      .avatar-wrap {
+        width: 200px;
+        height: 200px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .stats {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .hero-actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
 </head>
-<body>Placeholder - will update with full content</body>
+<body>
+  <!-- NAV -->
+  <nav id="nav">
+    <div class="container nav-inner">
+      <a href="#" class="logo">Stark Privacy <span>/ privacy</span></a>
+      <ul class="nav-links">
+        <li><a href="#destacados">Proyectos</a></li>
+        <li><a href="#sobre">Sobre mí</a></li>
+        <li><a href="#contenido">Contenido</a></li>
+        <li><a href="#herramientas">Herramientas</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+      <a href="https://privtr.ee/@boringprivacy" class="nav-cta" target="_blank" rel="noopener">Academia</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="hero-label">Divulgación · Soberanía digital</div>
+        <h1>Sin privacidad<br>tu libertad es<br><em>solo una ilusión</em></h1>
+        <p class="hero-lead">
+          Enseño a proteger lo que importa: tu identidad, tus comunicaciones y tu soberanía digital. Formación práctica, herramientas reales y cero marketing vacío.
+        </p>
+        <div class="hero-actions">
+          <a href="https://privtr.ee/@boringprivacy" class="btn btn-primary" target="_blank" rel="noopener">
+            Entrar en la Academia
+          </a>
+          <a href="https://privacidad.me" class="btn btn-secondary" target="_blank" rel="noopener">
+            privacidad.me
+          </a>
+        </div>
+        <div class="social-row">
+          <a href="https://www.youtube.com/@StarkPrivacy" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube">▶</a>
+          <a href="https://t.me/StarkPrivacy" target="_blank" rel="noopener" title="Telegram" aria-label="Telegram">✈</a>
+          <a href="https://x.com/starkprivacy" target="_blank" rel="noopener" title="X" aria-label="X">𝕏</a>
+          <a href="https://www.instagram.com/starkprivacy_" target="_blank" rel="noopener" title="Instagram" aria-label="Instagram">◉</a>
+          <a href="https://discord.gg/cax9UWtk2D" target="_blank" rel="noopener" title="Discord" aria-label="Discord">⬡</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="avatar-wrap">
+          <img src="https://pbs.twimg.com/profile_images/1691362458655440896/jaacLom0.jpg" alt="Stark Privacy" width="280" height="280">
+          <div class="avatar-badge">0x0732E79E</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- DESTACADOS -->
+  <section class="destacados" id="destacados">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">Proyectos principales</div>
+        <h2>Donde se construye privacidad real</h2>
+        <p>Dos espacios que mantengo activos: formación estructurada y una identidad digital sin rastreo.</p>
+      </div>
+      <div class="cards-2">
+        <article class="card">
+          <div class="card-icon">📖</div>
+          <h3>Academia Boring Privacy</h3>
+          <p>Formación práctica desde cero. Cursos de introducción a la privacidad, hardware, OSINT, Bitcoin y más. Comunidad activa y descuentos exclusivos.</p>
+          <a href="https://privtr.ee/@boringprivacy" class="card-link" target="_blank" rel="noopener">Acceder a la academia →</a>
+        </article>
+        <article class="card">
+          <div class="card-icon">◈</div>
+          <h3>privacidad.me</h3>
+          <p>Identidad digital open-source y sin rastreo. Enlaces públicos, tarjeta de contacto opcional y control real de tus datos. Alternativa seria a los link-in-bio tradicionales.</p>
+          <a href="https://privacidad.me" class="card-link" target="_blank" rel="noopener">Crear mi perfil →</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOBRE MÍ -->
+  <section id="sobre">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">Sobre mí</div>
+        <h2>Quién hay detrás</h2>
+      </div>
+      <div class="sobre-grid">
+        <div>
+          <div class="stats">
+            <div class="stat">
+              <div class="stat-num">+90k</div>
+              <div class="stat-label">en X</div>
+            </div>
+            <div class="stat">
+              <div class="stat-num">+28k</div>
+              <div class="stat-label">en YouTube</div>
+            </div>
+            <div class="stat">
+              <div class="stat-num">+160</div>
+              <div class="stat-label">formados</div>
+            </div>
+            <div class="stat">
+              <div class="stat-num">2022</div>
+              <div class="stat-label">inicio público</div>
+            </div>
+          </div>
+        </div>
+        <div class="sobre-text">
+          <p>
+            Me dedico a <strong>divulgar privacidad digital de forma práctica</strong>. Empecé a preocuparme en serio por estos temas hace años; más adelante decidí compartir lo que aprendía.
+          </p>
+          <p>
+            Hoy soy el fundador de <strong>Boring Privacy</strong>, una academia donde enseño desde los fundamentos hasta herramientas concretas (sistemas, hardware, comunicaciones, OSINT y más). También impulso <strong>privacidad.me</strong>, una plataforma de identidad digital open-source y sin rastreo.
+          </p>
+          <p>
+            He participado en podcasts y espacios de referencia del ámbito hispanohablante. Mi enfoque es simple: menos teoría abstracta y más acciones que cualquiera pueda aplicar para recuperar control sobre su información y su soberanía.
+          </p>
+          <p>
+            El eslogan no es un eslogan. Es la conclusión a la que llegué después de ver cómo se construye el control a través de los datos.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTENIDO -->
+  <section id="contenido">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">Contenido</div>
+        <h2>Dónde encontrar el material</h2>
+        <p>Vídeo, audio y newsletter. Elige el formato que mejor te funcione.</p>
+      </div>
+      <div class="contenido-grid">
+        <article class="content-card">
+          <div class="tag">YouTube</div>
+          <h3>Canal de vídeo</h3>
+          <p>Explicaciones claras sobre amenazas, herramientas y hábitos de privacidad. Contenido directo, sin relleno.</p>
+          <a href="https://www.youtube.com/@StarkPrivacy" class="btn btn-secondary" target="_blank" rel="noopener">Ver canal</a>
+        </article>
+        <article class="content-card">
+          <div class="tag">Audio</div>
+          <h3>Podcasts</h3>
+          <p>Apariciones y conversaciones en profundidad sobre privacidad, soberanía y control digital.</p>
+          <a href="https://privtr.ee/@starkpodcasts" class="btn btn-secondary" target="_blank" rel="noopener">Escuchar</a>
+        </article>
+        <article class="content-card newsletter">
+          <div class="tag">Newsletter</div>
+          <h3>Suscríbete</h3>
+          <p>Actualizaciones, lanzamientos de la academia y recursos seleccionados. Sin ruido.</p>
+          <a href="https://boringprivacy.io/#newsletter" class="btn" target="_blank" rel="noopener">Suscribirme</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- HERRAMIENTAS -->
+  <section id="herramientas">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">Recomendaciones</div>
+        <h2>Buenos servicios de privacidad</h2>
+        <p>Herramientas que utilizo o recomiendo. Algunos enlaces incluyen descuentos asociados.</p>
+      </div>
+      <div class="tools-grid">
+        <a href="https://bitbox.swiss/stark" class="tool" target="_blank" rel="noopener">
+          <div class="tool-name">Bitbox / H. Wallet</div>
+          <div class="tool-desc">Hardware wallet</div>
+          <div class="tool-badge">5% descuento</div>
+        </a>
+        <a href="https://silkpad.net/?ref=STARK" class="tool" target="_blank" rel="noopener">
+          <div class="tool-name">Silkpad</div>
+          <div class="tool-desc">Ordenadores orientados a privacidad</div>
+          <div class="tool-badge">5% descuento</div>
+        </a>
+        <a href="http://rwrd.io/ref_N5YUSNA?c" class="tool" target="_blank" rel="noopener">
+          <div class="tool-name">Routers</div>
+          <div class="tool-desc">Routers con enfoque en privacidad</div>
+          <div class="tool-badge">10% descuento</div>
+        </a>
+        <a href="https://shop.nitrokey.com/shop?aff_ref=35" class="tool" target="_blank" rel="noopener">
+          <div class="tool-name">Nitrokey</div>
+          <div class="tool-desc">2FA y dispositivos de seguridad</div>
+        </a>
+        <a href="https://smspool.net/?r=STARK" class="tool" target="_blank" rel="noopener">
+          <div class="tool-name">SMSPool</div>
+          <div class="tool-desc">Números temporales</div>
+        </a>
+        <a href="https://www.bitrefill.com/invite/a1pnn6vl" class="tool" target="_blank" rel="noopener">
+          <div class="tool-name">Bitrefill</div>
+          <div class="tool-desc">Gasta cripto sin KYC</div>
+        </a>
+        <a href="https://go.getproton.me/SH2GD" class="tool" target="_blank" rel="noopener">
+          <div class="tool-name">Proton Pack</div>
+          <div class="tool-desc">Suite completa</div>
+          <div class="tool-badge">30% descuento</div>
+        </a>
+        <a href="https://go.getproton.me/SH1Ou" class="tool" target="_blank" rel="noopener">
+          <div class="tool-name">Proton VPN</div>
+          <div class="tool-desc">VPN de confianza</div>
+          <div class="tool-badge">70% descuento</div>
+        </a>
+        <a href="https://go.getproton.me/SH1Ot" class="tool" target="_blank" rel="noopener">
+          <div class="tool-name">Proton Pass</div>
+          <div class="tool-desc">Gestor de contraseñas</div>
+          <div class="tool-badge">50% descuento</div>
+        </a>
+        <a href="https://go.getproton.me/SH141" class="tool" target="_blank" rel="noopener">
+          <div class="tool-name">Proton Mail</div>
+          <div class="tool-desc">Correo cifrado</div>
+          <div class="tool-badge">50% descuento</div>
+        </a>
+        <a href="https://go.getproton.me/SH1EK" class="tool" target="_blank" rel="noopener">
+          <div class="tool-name">Proton Drive</div>
+          <div class="tool-desc">Almacenamiento cifrado</div>
+          <div class="tool-badge">50% descuento</div>
+        </a>
+        <a href="https://go.getproton.me/SH2jE" class="tool" target="_blank" rel="noopener">
+          <div class="tool-name">Proton para empresas</div>
+          <div class="tool-desc">Soluciones profesionales</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section id="contacto">
+    <div class="container">
+      <div class="contacto-box">
+        <div>
+          <h2>Contacto seguro</h2>
+          <p>Para asuntos relacionados con privacidad, colaboraciones o la academia. Prefiero el correo cifrado.</p>
+          <a href="mailto:stark@boringprivacy.io" class="btn btn-primary">stark@boringprivacy.io</a>
+        </div>
+        <div>
+          <div class="pgp">
+            <span>🔑</span>
+            <span>PGP Key ID: <a href="https://boringprivacy.io/pgp/stark.txt" target="_blank" rel="noopener">0x0732E79E</a></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container footer-inner">
+      <div class="footer-copy">
+        Stark Privacy · Sin privacidad tu libertad es solo una ilusión
+      </div>
+      <div class="footer-links">
+        <a href="https://privacidad.me" target="_blank" rel="noopener">privacidad.me</a>
+        <a href="https://privtr.ee/@boringprivacy" target="_blank" rel="noopener">Academia</a>
+        <a href="https://boringprivacy.io/#newsletter" target="_blank" rel="noopener">Newsletter</a>
+        <a href="https://privtr.ee/@starkpodcasts" target="_blank" rel="noopener">Podcasts</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Subtle nav border on scroll
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 20) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
+    });
+  </script>
+</body>
 </html>
