@@ -1,1 +1,127 @@
-PLACEHOLDER_TEMP
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>// private ops</title>
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#000;--panel:#0a0e14;--border:#1a2330;--text:#c8d0dc;--dim:#4a5568;--blue:#3b82f6;--green:#00ff9d;--btc:#f7931a;--xmr:#ff6600;--red:#ff0040;--font:'IBM Plex Mono',ui-monospace,monospace}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:13px;line-height:1.6;min-height:100vh}
+    body::after{content:"";position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent 0,transparent 1px,rgba(0,0,0,.15) 1px,rgba(0,0,0,.15) 2px);pointer-events:none;z-index:9999;opacity:.4}
+    a{color:var(--blue);text-decoration:none}a:hover{color:var(--green)}
+    .wrap{max-width:780px;margin:0 auto;padding:0 1.2rem}
+    .top{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 0;border-bottom:1px solid var(--border);font-size:11px;letter-spacing:.08em}
+    .top a{color:var(--dim)}.top a:hover{color:var(--blue)}
+    .live{color:var(--green);display:flex;align-items:center;gap:.4rem}
+    .live::before{content:"";width:5px;height:5px;background:var(--green);border-radius:50%;box-shadow:0 0 6px var(--green);animation:blink 1.6s infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+    header{padding:2.8rem 0 2rem}
+    .prefix{color:var(--dim);font-size:11px;letter-spacing:.12em;margin-bottom:.6rem}
+    h1{font-size:clamp(1.5rem,4vw,2rem);font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#e8eef6;margin-bottom:.5rem}
+    h1 span{color:var(--blue)}
+    .sub{color:var(--dim);font-size:12px;letter-spacing:.04em}
+    .warn{background:rgba(255,0,64,.06);border:1px solid rgba(255,0,64,.25);border-left:3px solid var(--red);padding:.7rem 1rem;font-size:11px;color:#c08090;margin-bottom:2rem}
+    section{padding:1.8rem 0}
+    .label{color:var(--blue);font-size:10px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:.9rem;display:flex;align-items:center;gap:.5rem}
+    .label::before{content:"//";color:var(--dim)}
+    .price-block{background:var(--panel);border:1px solid var(--border);margin-bottom:2rem}
+    .price-head{display:flex;justify-content:space-between;align-items:center;padding:.7rem 1rem;border-bottom:1px solid var(--border);font-size:10px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase}
+    .price-grid{display:grid;grid-template-columns:1fr 1fr}
+    @media(max-width:560px){.price-grid{grid-template-columns:1fr}}
+    .price-col{padding:1.3rem 1.2rem}
+    .price-col+.price-col{border-left:1px solid var(--border)}
+    @media(max-width:560px){.price-col+.price-col{border-left:none;border-top:1px solid var(--border)}}
+    .price-col.btc{border-top:2px solid var(--btc)}.price-col.xmr{border-top:2px solid var(--xmr)}
+    .coin{font-size:11px;letter-spacing:.1em;margin-bottom:.4rem}
+    .coin.btc{color:var(--btc)}.coin.xmr{color:var(--xmr)}
+    .amount{font-size:1.45rem;font-weight:600;margin-bottom:.25rem}
+    .amount.btc{color:var(--btc)}.amount.xmr{color:var(--xmr)}
+    .note{font-size:11px;color:var(--dim)}
+    .pref{display:inline-block;margin-top:.6rem;font-size:10px;letter-spacing:.08em;padding:.2rem .5rem;border:1px solid var(--xmr);color:var(--xmr)}
+    .ticker{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid var(--border);font-size:11px}
+    @media(max-width:500px){.ticker{grid-template-columns:1fr}}
+    .tick{padding:.65rem 1rem;border-right:1px solid var(--border)}.tick:last-child{border-right:none}
+    .tick-label{color:var(--dim);font-size:9px;letter-spacing:.1em;margin-bottom:.15rem}
+    .tick-val{font-weight:500}.tick-val.btc{color:var(--btc)}.tick-val.xmr{color:var(--xmr)}
+    .chg{font-size:10px;margin-left:.3rem}.up{color:var(--green)}.down{color:var(--red)}
+    .chart-box{border-top:1px solid var(--border);padding:.9rem 1rem 1rem}
+    .chart-label{font-size:9px;letter-spacing:.12em;color:var(--dim);margin-bottom:.5rem;text-transform:uppercase}
+    #c{width:100%;height:90px;display:block}
+    .ops{display:grid;border:1px solid var(--border)}
+    .op{display:grid;grid-template-columns:110px 1fr;border-bottom:1px solid var(--border)}
+    .op:last-child{border-bottom:none}.op:hover{background:rgba(59,130,246,.04)}
+    .op-id{padding:.9rem 1rem;border-right:1px solid var(--border);color:var(--blue);font-size:11px;letter-spacing:.06em;display:flex;align-items:center}
+    .op-body{padding:.9rem 1.1rem}.op-body p{color:var(--dim);font-size:12px;margin:0}
+    .steps{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--border)}
+    @media(max-width:600px){.steps{grid-template-columns:1fr 1fr}}
+    .step{padding:1rem .8rem;text-align:center;border-right:1px solid var(--border)}.step:last-child{border-right:none}
+    .step-n{color:var(--blue);font-size:10px;letter-spacing:.12em;margin-bottom:.3rem}.step-t{font-size:12px}
+    .channels{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.8rem}
+    .ch{font-size:11px;letter-spacing:.06em;padding:.45rem .85rem;border:1px solid var(--border);color:var(--text);background:#05070a}.ch:hover{border-color:var(--blue);color:var(--blue)}
+    footer{margin-top:3rem;padding:1.4rem 0 2rem;border-top:1px solid var(--border);font-size:10px;letter-spacing:.1em;color:var(--dim);text-align:center}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top"><a href="index.html">← exit</a><div class="live">CHANNEL_OPEN</div></div>
+    <header>
+      <div class="prefix">0x / private / restricted</div>
+      <h1>Private <span>Operations</span></h1>
+      <p class="sub">1:1 · OpSec · No logs · No middlemen</p>
+    </header>
+    <div class="warn">ACCESO RESTRINGIDO — Esta sección no está indexada. Si llegaste aquí por casualidad, vuelve atrás.</div>
+    <div class="price-block">
+      <div class="price-head"><span>engagement rates</span><span id="clock">--:--:--</span></div>
+      <div class="price-grid">
+        <div class="price-col btc"><div class="coin btc">₿ BITCOIN</div><div class="amount btc">0.005 – 0.02</div><div class="note">sesión / scope acotado</div></div>
+        <div class="price-col xmr"><div class="coin xmr">ɱ MONERO</div><div class="amount xmr">1.5 – 6</div><div class="note">preferido</div><span class="pref">PRIVACY FIRST</span></div>
+      </div>
+      <div class="ticker">
+        <div class="tick"><div class="tick-label">BTC/USD</div><div><span class="tick-val btc" id="btc-p">—</span><span class="chg" id="btc-c"></span></div></div>
+        <div class="tick"><div class="tick-label">XMR/USD</div><div><span class="tick-val xmr" id="xmr-p">—</span><span class="chg" id="xmr-c"></span></div></div>
+        <div class="tick"><div class="tick-label">XMR/BTC</div><div class="tick-val" id="ratio">—</div></div>
+      </div>
+      <div class="chart-box"><div class="chart-label">btc vs xmr · 7d normalized</div><canvas id="c"></canvas></div>
+    </div>
+    <section>
+      <div class="label">scope</div>
+      <div class="ops">
+        <div class="op"><div class="op-id">THREAT_MODEL</div><div class="op-body"><p>Análisis de superficie de ataque personal. Quién te busca, cómo y por dónde. Reducción de exposición concreta.</p></div></div>
+        <div class="op"><div class="op-id">HARDENING</div><div class="op-body"><p>Setup de sistemas, comunicaciones y hábitos alineados a tu perfil de amenaza. Sin marketing, solo lo que funciona.</p></div></div>
+        <div class="op"><div class="op-id">SECURE_COMMS</div><div class="op-body"><p>Canales, protocolos y herramientas resistentes a vigilancia. Configuración real, no tutoriales genéricos.</p></div></div>
+        <div class="op"><div class="op-id">OPSEC_REVIEW</div><div class="op-body"><p>Auditoría de tus prácticas actuales. Qué estás filtrando sin saberlo y cómo cortarlo.</p></div></div>
+        <div class="op"><div class="op-id">IDENTITY</div><div class="op-body"><p>Higiene de identidades, datos públicos y minimización de huella. Separación de contextos.</p></div></div>
+        <div class="op"><div class="op-id">CUSTOM</div><div class="op-body"><p>Cualquier misión específica que requiera discreción y ejecución limpia. Se define, se acota, se hace.</p></div></div>
+      </div>
+    </section>
+    <section>
+      <div class="label">process</div>
+      <div class="steps">
+        <div class="step"><div class="step-n">01</div><div class="step-t">contacto</div></div>
+        <div class="step"><div class="step-n">02</div><div class="step-t">scope</div></div>
+        <div class="step"><div class="step-n">03</div><div class="step-t">pago</div></div>
+        <div class="step"><div class="step-n">04</div><div class="step-t">ejecución</div></div>
+      </div>
+      <p style="margin-top:1rem;color:var(--dim);font-size:12px">Solo cuando el alcance está claro se solicita pago. BTC o XMR. Sin intermediarios.</p>
+    </section>
+    <section>
+      <div class="label">channels</div>
+      <div class="channels">
+        <a href="https://t.me/StarkPrivacy" class="ch" target="_blank" rel="noopener">TELEGRAM</a>
+        <a href="https://x.com/starkprivacy" class="ch" target="_blank" rel="noopener">X / DM</a>
+        <a href="mailto:stark@boringprivacy.io?subject=private%20ops" class="ch">EMAIL</a>
+        <a href="https://discord.gg/cax9UWtk2D" class="ch" target="_blank" rel="noopener">DISCORD</a>
+      </div>
+    </section>
+    <footer>STARK · NO LOGS · NO TRACE · NO INDEX</footer>
+  </div>
+  <script>
+    function tick(){const d=new Date();document.getElementById('clock').textContent=d.toUTCString().split(' ')[4]+' UTC'}tick();setInterval(tick,1000);
+    async function prices(){try{const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,monero&vs_currencies=usd&include_24hr_change=true');const d=await r.json();const b=d.bitcoin,x=d.monero;if(b){document.getElementById('btc-p').textContent='$'+Math.round(b.usd).toLocaleString();const c=b.usd_24h_change||0;const el=document.getElementById('btc-c');el.textContent=(c>=0?'+':'')+c.toFixed(1)+'%';el.className='chg '+(c>=0?'up':'down')}if(x){document.getElementById('xmr-p').textContent='$'+x.usd.toFixed(1);const c=x.usd_24h_change||0;const el=document.getElementById('xmr-c');el.textContent=(c>=0?'+':'')+c.toFixed(1)+'%';el.className='chg '+(c>=0?'up':'down')}if(b&&x&&b.usd)document.getElementById('ratio').textContent=(x.usd/b.usd).toFixed(5)}catch(e){}}prices();
+    function chart(){const cv=document.getElementById('c');if(!cv)return;const ctx=cv.getContext('2d');const W=cv.offsetWidth;cv.width=W*2;cv.height=180;ctx.scale(2,2);const H=90;const btc=[.38,.42,.4,.47,.51,.48,.54,.57,.52,.59,.61,.58,.64,.67];const xmr=[.52,.49,.55,.51,.47,.5,.45,.48,.53,.57,.54,.6,.58,.63];function line(pts,col){ctx.beginPath();pts.forEach((p,i)=>{const x=(i/(pts.length-1))*(W-16)+8;const y=H-12-p*(H-24);i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.strokeStyle=col;ctx.lineWidth=1.5;ctx.stroke()}ctx.strokeStyle='rgba(26,35,48,.9)';ctx.lineWidth=1;for(let i=0;i<4;i++){const y=12+i*((H-24)/3);ctx.beginPath();ctx.moveTo(8,y);ctx.lineTo(W-8,y);ctx.stroke()}line(btc,'#f7931a');line(xmr,'#ff6600')}window.addEventListener('load',chart);window.addEventListener('resize',chart);
+  </script>
+</body>
+</html>
