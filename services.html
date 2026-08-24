@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>// ops</title>
+  <title>·</title>
   <meta name="robots" content="noindex, nofollow, noarchive">
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #000;
-      --panel: #080b0f;
-      --line: #161d27;
-      --text: #d8dee8;
-      --muted: #5a6575;
-      --cyan: #00d4ff;
+      --panel: #07090c;
+      --line: #141a22;
+      --text: #c8d0dc;
+      --muted: #3e4856;
+      --cyan: #00e5ff;
       --blue: #3b82f6;
-      --green: #00e676;
+      --green: #00ff9c;
       --btc: #f7931a;
       --xmr: #ff6600;
       --font: 'IBM Plex Mono', ui-monospace, monospace;
@@ -25,189 +25,193 @@
       font-family: var(--font);
       background: var(--bg);
       color: var(--text);
-      font-size: 13.5px;
-      line-height: 1.65;
+      font-size: 13px;
+      line-height: 1.6;
       min-height: 100vh;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: "";
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9998;
     }
     body::after {
       content: "";
       position: fixed; inset: 0;
-      background: repeating-linear-gradient(0deg, transparent 0, transparent 2px, rgba(0,0,0,.18) 2px, rgba(0,0,0,.18) 4px);
-      pointer-events: none; z-index: 9999; opacity: .45;
+      background: repeating-linear-gradient(0deg, transparent 0, transparent 1px, rgba(0,0,0,.35) 1px, rgba(0,0,0,.35) 2px);
+      pointer-events: none; z-index: 9999; opacity: .7;
     }
     a { color: var(--cyan); text-decoration: none; }
-    a:hover { color: #fff; }
-    .wrap { max-width: 680px; margin: 0 auto; padding: 0 1.1rem 3rem; }
+    a:hover { color: #fff; text-shadow: 0 0 12px var(--cyan); }
+    .wrap {
+      max-width: 620px;
+      margin: 0 auto;
+      padding: 0 1.2rem 4rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
     .top {
       display: flex; justify-content: space-between; align-items: center;
-      padding: .75rem 0; border-bottom: 1px solid var(--line);
-      font-size: 10px; letter-spacing: .12em;
+      padding: .8rem 0;
+      font-size: 10px; letter-spacing: .14em;
+      color: var(--muted);
     }
     .top a { color: var(--muted); }
     .top a:hover { color: var(--cyan); }
-    .live {
-      color: var(--green); display: flex; align-items: center; gap: .35rem;
+    .dot {
+      width: 5px; height: 5px; background: var(--green);
+      border-radius: 50%; box-shadow: 0 0 10px var(--green);
+      animation: blink 1.6s infinite;
+      display: inline-block; margin-right: .4rem;
     }
-    .live::before {
-      content: ""; width: 5px; height: 5px; background: var(--green);
-      border-radius: 50%; box-shadow: 0 0 8px var(--green); animation: blink 1.4s infinite;
-    }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.15} }
     .prices {
       display: grid; grid-template-columns: 1fr 1fr;
-      border: 1px solid var(--line); border-top: none; background: var(--panel);
+      border: 1px solid var(--line);
+      background: var(--panel);
+      margin-bottom: 3.5rem;
     }
-    @media (max-width: 540px) { .prices { grid-template-columns: 1fr; } }
+    @media (max-width: 520px) { .prices { grid-template-columns: 1fr; } }
     .pblock {
-      display: grid; grid-template-columns: 1fr auto; gap: .35rem .7rem;
-      padding: .85rem .95rem; align-items: start;
+      display: grid; grid-template-columns: 1fr auto; gap: .3rem .6rem;
+      padding: .8rem .9rem; align-items: start;
     }
     .pblock + .pblock { border-left: 1px solid var(--line); }
-    @media (max-width: 540px) {
+    @media (max-width: 520px) {
       .pblock + .pblock { border-left: none; border-top: 1px solid var(--line); }
     }
     .pblock.btc { border-top: 2px solid var(--btc); }
     .pblock.xmr { border-top: 2px solid var(--xmr); }
     .plabel { font-size: 9px; letter-spacing: .14em; color: var(--muted); text-transform: uppercase; }
-    .pval { font-size: 1.25rem; font-weight: 600; }
-    .pval.btc { color: var(--btc); }
-    .pval.xmr { color: var(--xmr); }
-    .pchg { font-size: 10px; margin-left: .3rem; }
+    .pval { font-size: 1.2rem; font-weight: 600; }
+    .pval.btc { color: var(--btc); text-shadow: 0 0 14px rgba(247,147,26,.3); }
+    .pval.xmr { color: var(--xmr); text-shadow: 0 0 14px rgba(255,102,0,.3); }
+    .pchg { font-size: 10px; margin-left: .25rem; }
     .up { color: var(--green); }
     .down { color: #ff3355; }
     .pinfo {
-      grid-column: 1 / -1; font-size: 11px; color: var(--muted);
-      line-height: 1.4; margin-top: .15rem; padding-top: .35rem;
-      border-top: 1px solid rgba(22,29,39,.9);
+      grid-column: 1 / -1; font-size: 10.5px; color: var(--muted);
+      line-height: 1.4; margin-top: .1rem; padding-top: .3rem;
+      border-top: 1px solid rgba(20,26,34,.9);
     }
-    .pchart { width: 84px; height: 28px; }
+    .pchart { width: 78px; height: 26px; }
     .pchart canvas { width: 100%; height: 100%; display: block; }
-    header { padding: 1.8rem 0 1.2rem; }
-    .sys { font-size: 10px; letter-spacing: .14em; color: var(--muted); margin-bottom: .5rem; }
+    .core {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 1rem 0 2rem;
+    }
+    .sig {
+      font-size: 10px;
+      letter-spacing: .2em;
+      color: var(--muted);
+      margin-bottom: 1.4rem;
+      animation: flicker 5s infinite;
+    }
+    @keyframes flicker {
+      0%, 90%, 100% { opacity: 1; }
+      92% { opacity: .3; }
+      94% { opacity: 1; }
+      96% { opacity: .5; }
+      97% { opacity: 1; }
+    }
     h1 {
-      font-size: clamp(1.35rem, 3.8vw, 1.65rem);
-      font-weight: 600;
-      letter-spacing: .03em;
-      color: #eef2f8;
-      margin-bottom: .45rem;
+      font-size: clamp(1.5rem, 5vw, 2rem);
+      font-weight: 500;
+      letter-spacing: .08em;
+      color: #e8eef6;
+      margin-bottom: 1.2rem;
       position: relative;
       display: inline-block;
     }
     h1::before, h1::after {
       content: attr(data-text);
-      position: absolute; left: 0; top: 0; width: 100%;
-      overflow: hidden; pointer-events: none;
+      position: absolute; left: 0; top: 0;
+      width: 100%; overflow: hidden; pointer-events: none;
     }
     h1::before {
-      color: var(--cyan); clip-path: inset(0 0 55% 0);
-      transform: translate(-1.5px,0); opacity: .8;
-      animation: g1 3s infinite linear alternate-reverse;
+      color: var(--cyan);
+      clip-path: inset(0 0 48% 0);
+      transform: translate(-2.5px, 0);
+      opacity: .9;
+      animation: gl1 2.4s infinite linear alternate-reverse;
+      text-shadow: -2px 0 var(--cyan), 0 0 18px rgba(0,229,255,.4);
     }
     h1::after {
-      color: var(--blue); clip-path: inset(45% 0 0 0);
-      transform: translate(1.5px,0); opacity: .75;
-      animation: g2 2.4s infinite linear alternate-reverse;
+      color: var(--blue);
+      clip-path: inset(52% 0 0 0);
+      transform: translate(2.5px, 0);
+      opacity: .85;
+      animation: gl2 1.9s infinite linear alternate-reverse;
+      text-shadow: 2px 0 var(--blue), 0 0 14px rgba(59,130,246,.35);
     }
-    @keyframes g1 {
-      0%,90%,100% { transform: translate(0); }
-      92% { transform: translate(-2px,.5px); }
-      95% { transform: translate(1.5px,-.5px); }
+    @keyframes gl1 {
+      0%, 85%, 100% { transform: translate(0); }
+      87% { transform: translate(-3px, 1px); }
+      90% { transform: translate(2px, -1px); }
+      93% { transform: translate(-1.5px, 0); }
+      96% { transform: translate(1px, .5px); }
     }
-    @keyframes g2 {
-      0%,88%,100% { transform: translate(0); }
-      90% { transform: translate(2px,-.5px); }
-      94% { transform: translate(-1.5px,.5px); }
+    @keyframes gl2 {
+      0%, 82%, 100% { transform: translate(0); }
+      84% { transform: translate(3px, -1px); }
+      88% { transform: translate(-2px, 1px); }
+      91% { transform: translate(1.5px, 0); }
+      95% { transform: translate(-1px, -.5px); }
     }
-    .lead {
-      font-size: 13px; color: var(--muted); max-width: 44ch; line-height: 1.55;
+    .line {
+      width: 48px; height: 1px;
+      background: linear-gradient(90deg, var(--cyan), transparent);
+      margin-bottom: 1.4rem;
+      box-shadow: 0 0 8px var(--cyan);
     }
-    .warn {
-      font-size: 11px; letter-spacing: .04em; color: #7a5a65;
-      margin: .9rem 0 1.6rem; padding: .4rem .7rem;
-      border-left: 2px solid #ff3355; background: rgba(255,51,85,.03);
+    .msg {
+      font-size: 13px;
+      color: var(--muted);
+      max-width: 32ch;
+      line-height: 1.7;
+      margin-bottom: 2.2rem;
     }
-    .tags {
-      display: flex; flex-wrap: wrap; gap: .25rem .15rem;
-      font-size: 10px; letter-spacing: .1em; color: var(--muted);
-      margin-bottom: 1.8rem; line-height: 1.8;
+    .msg em {
+      font-style: normal;
+      color: var(--text);
     }
-    .tags span {
-      padding: .15rem .4rem;
-      border: 1px solid var(--line);
-      background: var(--panel);
+    .meta {
+      font-size: 11px;
+      letter-spacing: .08em;
+      color: var(--muted);
+      display: grid;
+      gap: .45rem;
     }
-    .tags span.hi {
-      border-color: rgba(0,212,255,.3);
+    .meta span {
+      display: flex;
+      gap: .6rem;
+    }
+    .meta span::before {
+      content: "›";
       color: var(--cyan);
+      opacity: .6;
     }
-    .block { margin-bottom: 1.7rem; }
-    .block h2 {
-      font-size: 12px; font-weight: 600; letter-spacing: .1em;
-      text-transform: uppercase; color: var(--cyan);
-      margin-bottom: .45rem;
-      text-shadow: 0 0 10px rgba(0,212,255,.25);
-    }
-    .block p {
-      font-size: 13px; color: var(--muted); margin-bottom: .4rem;
-    }
-    .block p strong { color: var(--text); font-weight: 500; }
-    .block .list {
-      font-size: 12.5px; color: var(--muted);
-      margin-top: .3rem;
-    }
-    .block .list span::after {
-      content: " · ";
-      color: #2a3344;
-    }
-    .block .list span:last-child::after { content: ""; }
-    .sub {
-      font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
-      color: var(--muted); margin: 1.6rem 0 .5rem;
-    }
-    .principles {
-      display: grid; gap: .7rem; margin-bottom: 1.7rem;
-    }
-    .prin strong {
-      display: block; font-size: 11px; letter-spacing: .1em;
-      color: var(--cyan); margin-bottom: .15rem; text-transform: uppercase;
-    }
-    .prin p { font-size: 12.5px; color: var(--muted); margin: 0; }
-    .scope {
-      border: 1px solid var(--line);
-      background: var(--panel);
-      padding: 1.15rem 1.05rem;
-      margin-bottom: 1.5rem;
-    }
-    .scope h2 {
-      font-size: 12px; font-weight: 600; letter-spacing: .1em;
-      text-transform: uppercase; color: var(--cyan); margin-bottom: .5rem;
-    }
-    .scope p { font-size: 13px; color: var(--muted); margin-bottom: .4rem; }
-    .scope p strong { color: var(--text); }
-    .ref {
-      margin-top: .9rem; padding-top: .75rem; border-top: 1px solid var(--line);
-      font-size: 12px; color: var(--muted);
-    }
-    .ref-h {
-      font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
-      color: #3a4555; margin-bottom: .35rem;
-    }
-    .ref-row {
-      display: flex; justify-content: space-between; gap: 1rem;
-      padding: .15rem 0;
-    }
-    .ref-row span:last-child { color: var(--text); }
-    footer {
-      margin-top: 2.2rem; padding-top: 1rem; border-top: 1px solid var(--line);
-      font-size: 10px; letter-spacing: .14em; color: #2a3344; text-align: center;
+    .foot {
+      margin-top: auto;
+      padding-top: 2rem;
+      font-size: 9px;
+      letter-spacing: .16em;
+      color: #1e2530;
+      text-align: center;
     }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="top">
-      <a href="index.html">← salir</a>
-      <div class="live">ONLINE</div>
+      <a href="index.html">←</a>
+      <div><span class="dot"></span>live</div>
     </div>
 
     <div class="prices">
@@ -219,7 +223,7 @@
             <span class="pchg" id="btc-c"></span>
           </div>
         </div>
-        <div class="pchart"><canvas id="c-btc" width="84" height="28"></canvas></div>
+        <div class="pchart"><canvas id="c-btc" width="78" height="26"></canvas></div>
         <div class="pinfo">Aceptado. On-chain. Mejor para montos altos o cuando la privacidad nativa no es prioritaria.</div>
       </div>
       <div class="pblock xmr">
@@ -230,89 +234,32 @@
             <span class="pchg" id="xmr-c"></span>
           </div>
         </div>
-        <div class="pchart"><canvas id="c-xmr" width="84" height="28"></canvas></div>
+        <div class="pchart"><canvas id="c-xmr" width="78" height="26"></canvas></div>
         <div class="pinfo">Preferido. Privacidad nativa. Sin rastro visible. Ideal para máxima discreción.</div>
       </div>
     </div>
 
-    <header>
-      <div class="sys">privado · restringido · noindex</div>
-      <h1 data-text="Operaciones privadas">Operaciones privadas</h1>
-      <p class="lead">Soporte discreto 1:1 para quienes requieren privacidad, coordinación y ejecución limpia. Pago en BTC o XMR.</p>
-    </header>
+    <div class="core">
+      <div class="sig">0x · canal privado</div>
 
-    <div class="warn">acceso restringido · si no buscas esto, sal</div>
+      <h1 data-text="solo si sabes">solo si sabes</h1>
 
-    <div class="tags">
-      <span class="hi">REVIEW</span>
-      <span>XMR PREFERIDO</span>
-      <span class="hi">BTC ACEPTADO</span>
-      <span>MANEJO PRIVADO</span>
-      <span class="hi">ALCANCE CLARO</span>
-      <span>SIN REGISTROS</span>
-      <span class="hi">PRIVACIDAD PRIMERO</span>
-      <span>EJECUCIÓN DISCRETA</span>
-    </div>
+      <div class="line"></div>
 
-    <div class="block">
-      <h2>Consultoría de privacidad</h2>
-      <p>Análisis y soporte técnico personalizado. Threat model, hardening de sistemas y comunicaciones, revisión de OpSec e higiene de identidades. Todo orientado a reducir exposición real.</p>
-    </div>
-
-    <div class="block">
-      <h2>Pagos BTC / XMR</h2>
-      <p>Acepto Bitcoin y Monero. XMR preferido por privacidad nativa. Sin intermediarios. Anticipo parcial una vez definido el alcance.</p>
-    </div>
-
-    <div class="block">
-      <h2>Infraestructura y setup</h2>
-      <p class="list">
-        <span>sistemas resistentes</span>
-        <span>comunicaciones seguras</span>
-        <span>hardening</span>
-        <span>minimización de huella</span>
-        <span>separación de contextos</span>
+      <p class="msg">
+        Contrataciones especiales.<br>
+        <em>Uno a uno.</em> Alcance cerrado.<br>
+        BTC o XMR. Sin rastro.
       </p>
-    </div>
 
-    <div class="sub">Alcance claro · Ejecución discreta</div>
-    <div class="block">
-      <p>Solicitud revisada. Alcance definido. Pago confirmado. Ejecución bajo términos claros y manejo discreto.</p>
-    </div>
-
-    <div class="sub">Diseñado para privacidad</div>
-    <div class="principles">
-      <div class="prin">
-        <strong>Privacidad primero</strong>
-        <p>Mínima exposición de datos. Sin recogida innecesaria.</p>
-      </div>
-      <div class="prin">
-        <strong>Seguridad operativa</strong>
-        <p>Canales privados, procesos seguros y manejo disciplinado.</p>
-      </div>
-      <div class="prin">
-        <strong>Revisión previa</strong>
-        <p>Cada solicitud se revisa de forma privada antes de aceptar. Se decide si es viable y está alineada.</p>
+      <div class="meta">
+        <span>sin paquetes</span>
+        <span>sin intermediarios</span>
+        <span>sin registros</span>
       </div>
     </div>
 
-    <div class="scope">
-      <h2>Precio por alcance</h2>
-      <p>El precio depende de <strong>alcance, riesgo, urgencia, nivel de discreción y complejidad técnica</strong>. No hay paquetes fijos. Una vez acordado el scope se solicita un anticipo parcial en BTC o XMR para iniciar.</p>
-      <div class="ref">
-        <div class="ref-h">referencia orientativa</div>
-        <div class="ref-row">
-          <span>sesión / revisión acotada</span>
-          <span>0.005 – 0.02 BTC · 1.5 – 6 XMR</span>
-        </div>
-        <div class="ref-row">
-          <span>operación extendida</span>
-          <span>según alcance</span>
-        </div>
-      </div>
-    </div>
-
-    <footer>STARK · NO LOGS · NO TRACE · NO INDEX</footer>
+    <div class="foot">noindex · no logs · no trace</div>
   </div>
 
   <script>
@@ -351,7 +298,7 @@
         i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
       });
       ctx.strokeStyle = col;
-      ctx.lineWidth = 1.4;
+      ctx.lineWidth = 1.3;
       ctx.stroke();
     }
     draw('c-btc', [0.38,0.44,0.41,0.49,0.47,0.54,0.51,0.57,0.59,0.56,0.62,0.65], '#f7931a');
