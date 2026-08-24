@@ -9,13 +9,13 @@
   <style>
     :root {
       --bg: #000000;
-      --bg2: #030508;
-      --panel: #070b10;
-      --line: #141a22;
-      --line2: #1c2530;
-      --text: #c5cdd8;
-      --muted: #3a4455;
-      --dim: #2a3342;
+      --bg2: #020406;
+      --panel: #060a0f;
+      --line: #121820;
+      --line2: #1a222e;
+      --text: #d0d8e4;
+      --muted: #4a5568;
+      --dim: #2c3544;
       --blue: #3b82f6;
       --cyan: #00f0ff;
       --green: #00ff9c;
@@ -30,178 +30,172 @@
       font-family: var(--font);
       background: var(--bg);
       color: var(--text);
-      font-size: 12.5px;
-      line-height: 1.55;
+      font-size: 13px;
+      line-height: 1.6;
       min-height: 100vh;
       overflow-x: hidden;
     }
     body::after {
       content: "";
       position: fixed; inset: 0;
-      background: repeating-linear-gradient(0deg, transparent 0px, transparent 1px, rgba(0,0,0,0.28) 1px, rgba(0,0,0,0.28) 2px);
-      pointer-events: none; z-index: 9999; opacity: 0.65;
+      background: repeating-linear-gradient(0deg, transparent 0px, transparent 1px, rgba(0,0,0,0.32) 1px, rgba(0,0,0,0.32) 2px);
+      pointer-events: none; z-index: 9999; opacity: 0.7;
     }
     body::before {
       content: "";
       position: fixed; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
       pointer-events: none; z-index: 9998;
     }
     a { color: var(--cyan); text-decoration: none; }
-    a:hover { color: var(--green); text-shadow: 0 0 8px rgba(0,255,156,0.4); }
-    .wrap { max-width: 760px; margin: 0 auto; padding: 0 1rem 2.5rem; }
+    a:hover { color: var(--green); text-shadow: 0 0 10px rgba(0,255,156,0.45); }
+    .wrap { max-width: 780px; margin: 0 auto; padding: 0 1rem 2.8rem; }
     .topbar {
       display: flex; justify-content: space-between; align-items: center;
-      padding: 0.75rem 0; border-bottom: 1px solid var(--line);
-      font-size: 10px; letter-spacing: 0.12em;
+      padding: 0.7rem 0; border-bottom: 1px solid var(--line);
+      font-size: 10px; letter-spacing: 0.14em;
     }
     .topbar a { color: var(--muted); }
     .topbar a:hover { color: var(--cyan); }
     .live {
       color: var(--green); display: flex; align-items: center; gap: 0.35rem;
-      text-shadow: 0 0 6px rgba(0,255,156,0.5);
+      text-shadow: 0 0 8px rgba(0,255,156,0.55);
     }
     .live::before {
       content: ""; width: 5px; height: 5px; background: var(--green);
-      border-radius: 50%; box-shadow: 0 0 8px var(--green); animation: blink 1.4s infinite;
+      border-radius: 50%; box-shadow: 0 0 10px var(--green); animation: blink 1.3s infinite;
     }
-    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.15; } }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.12; } }
     .price-head {
-      background: var(--panel); border: 1px solid var(--line); border-top: none;
-      display: grid; grid-template-columns: 1fr 1fr auto; gap: 0;
+      display: grid; grid-template-columns: 1fr 1fr;
+      border: 1px solid var(--line); border-top: none; background: var(--panel);
     }
-    @media (max-width: 600px) {
-      .price-head { grid-template-columns: 1fr 1fr; }
-      .price-head .chart-cell { grid-column: 1 / -1; border-top: 1px solid var(--line); }
+    @media (max-width: 560px) { .price-head { grid-template-columns: 1fr; } }
+    .pblock {
+      display: grid; grid-template-columns: 1fr auto; align-items: center;
+      padding: 0.75rem 0.9rem; gap: 0.6rem;
     }
-    .price-cell { padding: 0.7rem 0.9rem; border-right: 1px solid var(--line); }
-    .price-cell:last-of-type { border-right: none; }
-    .price-label {
-      font-size: 9px; letter-spacing: 0.14em; color: var(--muted);
-      margin-bottom: 0.2rem; text-transform: uppercase;
+    .pblock + .pblock { border-left: 1px solid var(--line); }
+    @media (max-width: 560px) { .pblock + .pblock { border-left: none; border-top: 1px solid var(--line); } }
+    .pblock.btc { border-top: 2px solid var(--btc); }
+    .pblock.xmr { border-top: 2px solid var(--xmr); }
+    .plabel {
+      font-size: 9px; letter-spacing: 0.16em; color: var(--muted);
+      text-transform: uppercase; margin-bottom: 0.15rem;
     }
-    .price-val { font-size: 1.05rem; font-weight: 600; letter-spacing: 0.02em; }
-    .price-val.btc { color: var(--btc); text-shadow: 0 0 10px rgba(247,147,26,0.25); }
-    .price-val.xmr { color: var(--xmr); text-shadow: 0 0 10px rgba(255,102,0,0.25); }
-    .price-chg { font-size: 10px; margin-left: 0.35rem; }
+    .pval { font-size: 1.15rem; font-weight: 600; letter-spacing: 0.02em; }
+    .pval.btc { color: var(--btc); text-shadow: 0 0 12px rgba(247,147,26,0.3); }
+    .pval.xmr { color: var(--xmr); text-shadow: 0 0 12px rgba(255,102,0,0.3); }
+    .pchg { font-size: 10px; margin-left: 0.3rem; }
     .up { color: var(--green); }
     .down { color: var(--red); }
-    .chart-cell { padding: 0.4rem 0.6rem; width: 160px; display: flex; align-items: center; }
-    #spark { width: 100%; height: 36px; display: block; }
-    header { padding: 1.8rem 0 1.2rem; }
-    .sys { font-size: 10px; letter-spacing: 0.18em; color: var(--muted); margin-bottom: 0.5rem; }
+    .pchart { width: 90px; height: 32px; }
+    .pchart canvas { width: 100%; height: 100%; display: block; }
+    header { padding: 1.7rem 0 1.1rem; }
+    .sys { font-size: 10px; letter-spacing: 0.16em; color: var(--muted); margin-bottom: 0.55rem; }
     h1 {
-      font-size: clamp(1.35rem, 4vw, 1.75rem); font-weight: 700;
-      letter-spacing: 0.1em; text-transform: uppercase; color: #e8eef6;
-      position: relative; margin-bottom: 0.35rem;
+      font-size: clamp(1.25rem, 3.5vw, 1.55rem); font-weight: 600;
+      letter-spacing: 0.06em; text-transform: none; color: #e8eef6;
+      position: relative; margin-bottom: 0.4rem; display: inline-block;
     }
     h1::before, h1::after {
       content: attr(data-text); position: absolute; left: 0; top: 0;
-      width: 100%; overflow: hidden;
+      width: 100%; overflow: hidden; pointer-events: none;
     }
     h1::before {
-      color: var(--cyan); clip-path: inset(0 0 58% 0);
-      transform: translate(-2px, 0); opacity: 0.85;
-      animation: g1 2.8s infinite linear alternate-reverse;
-      text-shadow: -1px 0 var(--cyan);
+      color: var(--cyan); clip-path: inset(0 0 60% 0);
+      transform: translate(-1.5px, 0); opacity: 0.7;
+      animation: g1 3.4s infinite linear alternate-reverse;
     }
     h1::after {
-      color: var(--red); clip-path: inset(42% 0 0 0);
-      transform: translate(2px, 0); opacity: 0.8;
-      animation: g2 2.2s infinite linear alternate-reverse;
-      text-shadow: 1px 0 var(--red);
+      color: var(--red); clip-path: inset(40% 0 0 0);
+      transform: translate(1.5px, 0); opacity: 0.65;
+      animation: g2 2.7s infinite linear alternate-reverse;
     }
     @keyframes g1 {
-      0%, 86%, 100% { transform: translate(0); opacity: 0.85; }
-      88% { transform: translate(-3px, 1px); opacity: 0.9; }
-      91% { transform: translate(2px, -1px); }
-      94% { transform: translate(-1px, 0); }
+      0%, 90%, 100% { transform: translate(0); }
+      92% { transform: translate(-2px, 0.5px); }
+      95% { transform: translate(1.5px, -0.5px); }
     }
     @keyframes g2 {
-      0%, 82%, 100% { transform: translate(0); opacity: 0.8; }
-      85% { transform: translate(3px, -1px); opacity: 0.9; }
-      89% { transform: translate(-2px, 1px); }
-      93% { transform: translate(1px, 0); }
+      0%, 88%, 100% { transform: translate(0); }
+      90% { transform: translate(2px, -0.5px); }
+      94% { transform: translate(-1.5px, 0.5px); }
     }
-    .sub { font-size: 11px; letter-spacing: 0.08em; color: var(--muted); }
+    .sub { font-size: 11.5px; letter-spacing: 0.05em; color: var(--muted); }
     .warn {
-      margin: 0.9rem 0 1.6rem; padding: 0.45rem 0.8rem;
-      border: 1px solid rgba(255,0,60,0.2); border-left: 2px solid var(--red);
-      background: rgba(255,0,60,0.04); font-size: 10px; letter-spacing: 0.04em;
-      color: #8a6070; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      margin: 0.85rem 0 1.5rem; padding: 0.4rem 0.75rem;
+      border: 1px solid rgba(255,0,60,0.18); border-left: 2px solid var(--red);
+      background: rgba(255,0,60,0.035); font-size: 10.5px; letter-spacing: 0.03em;
+      color: #7a5a65; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .strip {
-      display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 1.8rem;
-      font-size: 9px; letter-spacing: 0.1em;
+      display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 1.7rem;
+      font-size: 9.5px; letter-spacing: 0.08em;
     }
     .strip span {
-      padding: 0.2rem 0.45rem; border: 1px solid var(--line2);
+      padding: 0.22rem 0.5rem; border: 1px solid var(--line2);
       color: var(--muted); background: var(--bg2);
     }
-    .strip span.on { border-color: rgba(59,130,246,0.4); color: var(--blue); }
-    section { margin-bottom: 1.8rem; }
+    .strip span.on {
+      border-color: rgba(0,240,255,0.35); color: var(--cyan);
+      text-shadow: 0 0 6px rgba(0,240,255,0.2);
+    }
+    section { margin-bottom: 1.7rem; }
     .lab {
-      font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--blue); margin-bottom: 0.7rem;
+      font-size: 9.5px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--blue); margin-bottom: 0.65rem;
       display: flex; align-items: center; gap: 0.4rem;
     }
     .lab::before { content: "//"; color: var(--dim); }
-    p { color: var(--muted); margin-bottom: 0.55rem; font-size: 12px; }
+    p { color: var(--muted); margin-bottom: 0.5rem; font-size: 12.5px; line-height: 1.6; }
     p strong { color: var(--text); font-weight: 500; }
     .ops { border: 1px solid var(--line); background: var(--bg2); }
     .op {
-      display: grid; grid-template-columns: 105px 1fr;
+      display: grid; grid-template-columns: 108px 1fr;
       border-bottom: 1px solid var(--line); transition: background 0.12s;
     }
     .op:last-child { border-bottom: none; }
-    .op:hover { background: rgba(0,240,255,0.03); }
+    .op:hover { background: rgba(0,240,255,0.025); }
     .op-k {
-      padding: 0.7rem 0.75rem; border-right: 1px solid var(--line);
-      color: var(--cyan); font-size: 10px; letter-spacing: 0.06em;
-      display: flex; align-items: center; text-shadow: 0 0 6px rgba(0,240,255,0.2);
+      padding: 0.75rem 0.7rem; border-right: 1px solid var(--line);
+      color: var(--cyan); font-size: 10.5px; letter-spacing: 0.05em;
+      display: flex; align-items: center; text-shadow: 0 0 8px rgba(0,240,255,0.25);
     }
-    .op-v { padding: 0.7rem 0.9rem; font-size: 11.5px; color: var(--muted); }
+    .op-v { padding: 0.75rem 0.95rem; font-size: 12px; color: var(--muted); line-height: 1.55; }
     .flow {
       display: grid; grid-template-columns: repeat(4, 1fr);
       border: 1px solid var(--line); background: var(--bg2);
     }
     @media (max-width: 540px) { .flow { grid-template-columns: 1fr 1fr; } }
-    .f {
-      padding: 0.85rem 0.5rem; text-align: center;
-      border-right: 1px solid var(--line);
-    }
+    .f { padding: 0.9rem 0.5rem; text-align: center; border-right: 1px solid var(--line); }
     .f:last-child { border-right: none; }
     .f-n {
-      color: var(--cyan); font-size: 9px; letter-spacing: 0.16em;
-      margin-bottom: 0.25rem; text-shadow: 0 0 6px rgba(0,240,255,0.3);
+      color: var(--cyan); font-size: 9.5px; letter-spacing: 0.14em;
+      margin-bottom: 0.25rem; text-shadow: 0 0 8px rgba(0,240,255,0.3);
     }
-    .f-t { font-size: 11px; color: var(--text); }
-    .box {
-      border: 1px solid var(--line); background: var(--panel);
-      padding: 1.1rem 1rem;
-    }
-    .box p { font-size: 11.5px; }
-    .tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin: 0.9rem 0 0.3rem; }
+    .f-t { font-size: 12px; color: var(--text); }
+    .box { border: 1px solid var(--line); background: var(--panel); padding: 1.15rem 1.05rem; }
+    .box p { font-size: 12.5px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin: 0.9rem 0 0.25rem; }
     .t {
-      font-size: 9px; letter-spacing: 0.1em; padding: 0.2rem 0.45rem;
+      font-size: 9.5px; letter-spacing: 0.08em; padding: 0.22rem 0.5rem;
       border: 1px solid var(--line2); color: var(--muted); background: var(--bg);
     }
     .t.hi { border-color: rgba(0,240,255,0.35); color: var(--cyan); }
     .ref {
       margin-top: 1rem; padding-top: 0.85rem; border-top: 1px solid var(--line);
-      font-size: 10.5px; color: var(--muted);
+      font-size: 11.5px; color: var(--muted);
     }
     .ref-h {
-      letter-spacing: 0.14em; text-transform: uppercase; font-size: 9px;
+      letter-spacing: 0.12em; text-transform: uppercase; font-size: 9.5px;
       margin-bottom: 0.4rem; color: var(--dim);
     }
-    .ref-row {
-      display: flex; justify-content: space-between; gap: 1rem; padding: 0.2rem 0;
-    }
+    .ref-row { display: flex; justify-content: space-between; gap: 1rem; padding: 0.22rem 0; }
     .ref-row span:last-child { color: var(--text); }
     footer {
       margin-top: 2.2rem; padding-top: 1rem; border-top: 1px solid var(--line);
-      font-size: 9px; letter-spacing: 0.14em; color: var(--dim); text-align: center;
+      font-size: 9.5px; letter-spacing: 0.12em; color: var(--dim); text-align: center;
     }
   </style>
 </head>
@@ -213,22 +207,31 @@
     </div>
 
     <div class="price-head">
-      <div class="price-cell">
-        <div class="price-label">BTC / USD</div>
-        <div><span class="price-val btc" id="btc">—</span><span class="price-chg" id="btc-c"></span></div>
+      <div class="pblock btc">
+        <div>
+          <div class="plabel">Bitcoin</div>
+          <div>
+            <span class="pval btc" id="btc">—</span>
+            <span class="pchg" id="btc-c"></span>
+          </div>
+        </div>
+        <div class="pchart"><canvas id="c-btc" width="90" height="32"></canvas></div>
       </div>
-      <div class="price-cell">
-        <div class="price-label">XMR / USD</div>
-        <div><span class="price-val xmr" id="xmr">—</span><span class="price-chg" id="xmr-c"></span></div>
-      </div>
-      <div class="chart-cell">
-        <canvas id="spark" width="140" height="36"></canvas>
+      <div class="pblock xmr">
+        <div>
+          <div class="plabel">Monero</div>
+          <div>
+            <span class="pval xmr" id="xmr">—</span>
+            <span class="pchg" id="xmr-c"></span>
+          </div>
+        </div>
+        <div class="pchart"><canvas id="c-xmr" width="90" height="32"></canvas></div>
       </div>
     </div>
 
     <header>
       <div class="sys">0x · privado · restringido · noindex</div>
-      <h1 data-text="OPERACIONES PRIVADAS">OPERACIONES PRIVADAS</h1>
+      <h1 data-text="Operaciones privadas">Operaciones privadas</h1>
       <p class="sub">contratación 1:1 · opsec · sin registros · sin intermediarios</p>
     </header>
 
@@ -241,39 +244,19 @@
       <span>SIN REGISTROS</span>
       <span class="on">EJECUCIÓN DISCRETA</span>
       <span>PRIVACIDAD PRIMERO</span>
-      <span>MISSION REVIEW</span>
+      <span class="on">MISSION REVIEW</span>
     </div>
 
     <section>
       <div class="lab">servicios de contratación privada</div>
-      <p style="margin-bottom:0.7rem;">
-        Operaciones <strong>uno a uno</strong> orientadas a privacidad real. Cada servicio se contrata de forma independiente. Se define el alcance, se acuerda y se ejecuta.
-      </p>
+      <p>Operaciones <strong>uno a uno</strong> orientadas a privacidad real. Cada servicio se contrata de forma independiente. Se define el alcance, se acuerda y se ejecuta.</p>
       <div class="ops">
-        <div class="op">
-          <div class="op-k">THREAT_MODEL</div>
-          <div class="op-v">Análisis de superficie de ataque personal. Quién te busca, cómo y por dónde. Reducción concreta de exposición.</div>
-        </div>
-        <div class="op">
-          <div class="op-k">HARDENING</div>
-          <div class="op-v">Configuración de sistemas, comunicaciones y hábitos según perfil de amenaza. Solo lo que funciona.</div>
-        </div>
-        <div class="op">
-          <div class="op-k">COMMS</div>
-          <div class="op-v">Canales y protocolos resistentes a vigilancia. Configuración real, no tutoriales genéricos.</div>
-        </div>
-        <div class="op">
-          <div class="op-k">OPSEC</div>
-          <div class="op-v">Revisión de prácticas actuales. Qué estás filtrando sin saberlo y cómo cortarlo.</div>
-        </div>
-        <div class="op">
-          <div class="op-k">IDENTIDAD</div>
-          <div class="op-v">Higiene de identidades, datos públicos y minimización de huella. Separación de contextos.</div>
-        </div>
-        <div class="op">
-          <div class="op-k">CUSTOM</div>
-          <div class="op-v">Cualquier misión específica que requiera discreción y ejecución limpia.</div>
-        </div>
+        <div class="op"><div class="op-k">THREAT_MODEL</div><div class="op-v">Análisis de superficie de ataque personal. Quién te busca, cómo y por dónde. Reducción concreta de exposición.</div></div>
+        <div class="op"><div class="op-k">HARDENING</div><div class="op-v">Configuración de sistemas, comunicaciones y hábitos según perfil de amenaza. Solo lo que funciona.</div></div>
+        <div class="op"><div class="op-k">COMMS</div><div class="op-v">Canales y protocolos resistentes a vigilancia. Configuración real, no tutoriales genéricos.</div></div>
+        <div class="op"><div class="op-k">OPSEC</div><div class="op-v">Revisión de prácticas actuales. Qué estás filtrando sin saberlo y cómo cortarlo.</div></div>
+        <div class="op"><div class="op-k">IDENTIDAD</div><div class="op-v">Higiene de identidades, datos públicos y minimización de huella. Separación de contextos.</div></div>
+        <div class="op"><div class="op-k">CUSTOM</div><div class="op-v">Cualquier misión específica que requiera discreción y ejecución limpia.</div></div>
       </div>
     </section>
 
@@ -285,20 +268,14 @@
         <div class="f"><div class="f-n">03</div><div class="f-t">pago</div></div>
         <div class="f"><div class="f-n">04</div><div class="f-t">ejecución</div></div>
       </div>
-      <p style="margin-top:0.75rem;">
-        Request reviewed · Scope defined · Payment confirmed · Execution begins. Solo cuando el alcance está claro se solicita el anticipo.
-      </p>
+      <p style="margin-top:0.75rem;">Request reviewed · Scope defined · Payment confirmed · Execution begins. Solo cuando el alcance está claro se solicita el anticipo.</p>
     </section>
 
     <section>
       <div class="lab">contratación</div>
       <div class="box">
-        <p>
-          El precio depende de <strong>alcance, riesgo, urgencia y nivel de discreción</strong>. No hay paquetes fijos. Cada misión se revisa antes de aceptar.
-        </p>
-        <p>
-          Una vez acordado el scope se solicita un anticipo parcial en <strong>BTC o XMR</strong> para iniciar. Se prefiere XMR.
-        </p>
+        <p>El precio depende de <strong>alcance, riesgo, urgencia y nivel de discreción</strong>. No hay paquetes fijos. Cada misión se revisa antes de aceptar.</p>
+        <p>Una vez acordado el scope se solicita un anticipo parcial en <strong>BTC o XMR</strong> para iniciar. Se prefiere XMR.</p>
         <div class="tags">
           <span class="t hi">PRIVACIDAD PRIMERO</span>
           <span class="t">SCOPE-BASED</span>
@@ -309,21 +286,13 @@
         </div>
         <div class="ref">
           <div class="ref-h">referencia orientativa</div>
-          <div class="ref-row">
-            <span>sesión / revisión acotada</span>
-            <span>~ 0.005 – 0.02 BTC · 1.5 – 6 XMR</span>
-          </div>
-          <div class="ref-row">
-            <span>misión extendida</span>
-            <span>según alcance</span>
-          </div>
+          <div class="ref-row"><span>sesión / revisión acotada</span><span>~ 0.005 – 0.02 BTC · 1.5 – 6 XMR</span></div>
+          <div class="ref-row"><span>misión extendida</span><span>según alcance</span></div>
         </div>
       </div>
     </section>
 
-    <footer>
-      STARK · NO LOGS · NO TRACE · NO INDEX · PRIVATE OPS
-    </footer>
+    <footer>STARK · NO LOGS · NO TRACE · NO INDEX · PRIVATE OPS</footer>
   </div>
 
   <script>
@@ -337,42 +306,36 @@
           const c = b.usd_24h_change || 0;
           const el = document.getElementById('btc-c');
           el.textContent = (c >= 0 ? '+' : '') + c.toFixed(1) + '%';
-          el.className = 'price-chg ' + (c >= 0 ? 'up' : 'down');
+          el.className = 'pchg ' + (c >= 0 ? 'up' : 'down');
         }
         if (x) {
           document.getElementById('xmr').textContent = '$' + x.usd.toFixed(1);
           const c = x.usd_24h_change || 0;
           const el = document.getElementById('xmr-c');
           el.textContent = (c >= 0 ? '+' : '') + c.toFixed(1) + '%';
-          el.className = 'price-chg ' + (c >= 0 ? 'up' : 'down');
+          el.className = 'pchg ' + (c >= 0 ? 'up' : 'down');
         }
       } catch (e) {}
     }
     prices();
-
-    function spark() {
-      const cv = document.getElementById('spark');
+    function draw(id, pts, col) {
+      const cv = document.getElementById(id);
       if (!cv) return;
       const ctx = cv.getContext('2d');
       const W = cv.width, H = cv.height;
       ctx.clearRect(0, 0, W, H);
-      const btc = [0.4,0.45,0.42,0.5,0.48,0.55,0.52,0.58,0.6,0.57,0.63,0.66];
-      const xmr = [0.5,0.47,0.52,0.49,0.45,0.5,0.48,0.54,0.51,0.57,0.55,0.6];
-      function line(pts, col) {
-        ctx.beginPath();
-        pts.forEach((p, i) => {
-          const x = (i / (pts.length - 1)) * (W - 4) + 2;
-          const y = H - 4 - p * (H - 8);
-          i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
-        });
-        ctx.strokeStyle = col;
-        ctx.lineWidth = 1.2;
-        ctx.stroke();
-      }
-      line(btc, '#f7931a');
-      line(xmr, '#ff6600');
+      ctx.beginPath();
+      pts.forEach((p, i) => {
+        const x = (i / (pts.length - 1)) * (W - 2) + 1;
+        const y = H - 2 - p * (H - 4);
+        i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+      });
+      ctx.strokeStyle = col;
+      ctx.lineWidth = 1.4;
+      ctx.stroke();
     }
-    spark();
+    draw('c-btc', [0.38,0.44,0.41,0.49,0.47,0.54,0.51,0.57,0.59,0.56,0.62,0.65], '#f7931a');
+    draw('c-xmr', [0.48,0.45,0.51,0.47,0.43,0.49,0.46,0.53,0.5,0.56,0.54,0.59], '#ff6600');
   </script>
 </body>
 </html>
