@@ -6,365 +6,365 @@
   <title>·</title>
   <meta name="robots" content="noindex, nofollow, noarchive">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=IBM+Plex+Mono:wght@400;500;600&family=VT323&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --cyan: #00f6ff;
-      --green: #39ff14;
-      --dim: #1a2330;
-      --muted: #4a5a6a;
-      --btc: #f7931a;
-      --xmr: #ff6600;
-      --font: 'Share Tech Mono', 'IBM Plex Mono', monospace;
+    :root{
+      --bg:#000;
+      --panel:#03080a;
+      --line:#0c1a16;
+      --green:#00ff7f;
+      --green-dim:rgba(0,255,127,.5);
+      --green-soft:rgba(0,255,127,.08);
+      --cyan:#00e5ff;
+      --magenta:#ff2bd6;
+      --muted:#3f6656;
+      --btc:#f7931a;
+      --xmr:#ff6600;
+      --red:#ff3355;
+      --font:'Share Tech Mono','IBM Plex Mono',monospace;
+      --vt:'VT323',monospace;
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      font-family: var(--font);
-      background: #000;
-      color: #b8c4d0;
-      overflow-x: hidden;
-      min-height: 100vh;
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      font-family:var(--font);
+      background:var(--bg);
+      color:#a9c9bb;
+      overflow-x:hidden;
+      min-height:100vh;
+      cursor:default;
     }
-    .crt {
-      position: fixed; inset: 0; pointer-events: none; z-index: 100;
+    ::selection{background:var(--green);color:#000}
+
+    canvas#matrix{position:fixed;inset:0;z-index:0;opacity:.16}
+
+    .crt{
+      position:fixed;inset:0;pointer-events:none;z-index:100;
       background:
-        radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.75) 100%),
-        repeating-linear-gradient(0deg, transparent 0, transparent 2px, rgba(0,0,0,.28) 2px, rgba(0,0,0,.28) 4px);
+        radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,.8) 100%),
+        repeating-linear-gradient(0deg,transparent 0,transparent 2px,rgba(0,0,0,.32) 2px,rgba(0,0,0,.32) 4px);
     }
-    .noise {
-      position: fixed; inset: 0; pointer-events: none; z-index: 99; opacity: .06;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    .crt::after{
+      content:"";position:fixed;inset:0;pointer-events:none;
+      background:linear-gradient(rgba(0,255,127,.02),transparent 2px);
+      background-size:100% 3px;
+      animation:scan 9s linear infinite;
     }
-    .frame {
-      max-width: 640px;
-      margin: 0 auto;
-      padding: 1.2rem 1.1rem 2rem;
-      position: relative;
-      z-index: 1;
+    @keyframes scan{0%{transform:translateY(0)}100%{transform:translateY(100vh)}}
+    .noise{
+      position:fixed;inset:0;pointer-events:none;z-index:99;opacity:.05;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     }
-    .status {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 10px;
-      letter-spacing: .18em;
-      color: var(--muted);
-      margin-bottom: 1.1rem;
+
+    /* boot sequence */
+    #boot-screen{
+      position:fixed;inset:0;z-index:200;background:#000;
+      display:flex;align-items:center;justify-content:center;
+      padding:1.5rem;transition:opacity .5s ease;
     }
-    .status a {
-      color: var(--muted);
-      text-decoration: none;
+    #boot-screen.hide{opacity:0;pointer-events:none}
+    #boot-text{
+      font-family:var(--font);font-size:12.5px;line-height:1.9;
+      color:var(--green);white-space:pre-wrap;max-width:520px;width:100%;
+      text-shadow:0 0 6px rgba(0,255,127,.4);
     }
-    .status a:hover { color: var(--cyan); }
-    .online {
-      color: var(--green);
-      text-shadow: 0 0 8px var(--green);
+    #boot-text .cur{display:inline-block;width:7px;height:1em;background:var(--green);margin-left:2px;vertical-align:-2px;animation:blink 1s steps(1) infinite}
+    .skip-hint{position:fixed;bottom:1.2rem;left:0;right:0;text-align:center;font-size:9px;letter-spacing:.2em;color:var(--muted);z-index:201}
+
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+    main{position:relative;z-index:1;opacity:0;transition:opacity .6s ease}
+    main.show{opacity:1}
+
+    .frame{max-width:640px;margin:0 auto;padding:1.4rem 1.1rem 2.5rem;position:relative}
+    .frame::before,.frame::after{
+      content:"";position:absolute;width:16px;height:16px;
+      border-color:rgba(0,255,127,.3);pointer-events:none;
     }
-    .online::before {
-      content: "● ";
-      animation: blink 1.4s infinite;
+    .frame::before{top:6px;left:6px;border-top:1px solid;border-left:1px solid}
+    .frame::after{bottom:6px;right:6px;border-bottom:1px solid;border-right:1px solid}
+
+    .status{
+      display:flex;justify-content:space-between;align-items:center;
+      font-size:10px;letter-spacing:.16em;color:var(--muted);
+      margin-bottom:1rem;flex-wrap:wrap;gap:.4rem;
     }
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: .2; }
+    .status a{color:var(--muted);text-decoration:none}
+    .status a:hover{color:var(--cyan)}
+    .online{color:var(--green);text-shadow:0 0 8px var(--green)}
+    .online::before{content:"● ";animation:blink 1.4s infinite}
+
+    .sysbar{
+      display:flex;flex-wrap:wrap;gap:.4rem .9rem;
+      font-size:9.5px;letter-spacing:.1em;color:var(--muted);
+      padding:.55rem .7rem;margin-bottom:1.4rem;
+      border:1px solid var(--line);background:var(--panel);
     }
-    .rails {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1px;
-      background: #0c1016;
-      border: 1px solid #151c26;
-      margin-bottom: 2rem;
+    .sysbar b{color:#7fa694;font-weight:500}
+
+    .tx{margin-bottom:1.6rem;position:relative}
+    .tx-label{font-size:9px;letter-spacing:.25em;color:var(--muted);margin-bottom:.6rem}
+    .tx-title{
+      font-size:clamp(1.5rem,6vw,2.15rem);letter-spacing:.1em;color:#eafff2;
+      position:relative;display:inline-block;text-transform:uppercase;font-weight:700;
     }
-    @media (max-width: 480px) { .rails { grid-template-columns: 1fr; } }
-    .rail {
-      padding: .7rem .85rem;
-      background: #05070a;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .tx-title::before,.tx-title::after{
+      content:attr(data-text);position:absolute;left:0;top:0;width:100%;
+      overflow:hidden;pointer-events:none;
     }
-    .rail.btc { box-shadow: inset 0 2px 0 var(--btc); }
-    .rail.xmr { box-shadow: inset 0 2px 0 var(--xmr); }
-    .rail-name {
-      font-size: 9px;
-      letter-spacing: .14em;
-      color: var(--muted);
-      text-transform: uppercase;
+    .tx-title::before{
+      color:var(--cyan);clip-path:inset(0 0 55% 0);transform:translate(-2px,0);opacity:.9;
+      animation:glA 2.6s infinite linear alternate-reverse;
+      text-shadow:-2px 0 var(--cyan),0 0 20px rgba(0,229,255,.4);
     }
-    .rail-price {
-      font-size: 1.1rem;
-      font-weight: 500;
+    .tx-title::after{
+      color:var(--magenta);clip-path:inset(50% 0 0 0);transform:translate(2px,0);opacity:.85;
+      animation:glB 2.1s infinite linear alternate-reverse;
+      text-shadow:2px 0 var(--magenta);
     }
-    .rail.btc .rail-price { color: var(--btc); text-shadow: 0 0 12px rgba(247,147,26,.35); }
-    .rail.xmr .rail-price { color: var(--xmr); text-shadow: 0 0 12px rgba(255,102,0,.35); }
-    .rail-chg { font-size: 10px; margin-left: .3rem; }
-    .up { color: var(--green); }
-    .down { color: #ff3355; }
-    .spark { width: 60px; height: 20px; }
-    .tx {
-      margin-bottom: 1.8rem;
-      position: relative;
+    @keyframes glA{0%,86%,100%{transform:translate(0)}88%{transform:translate(-3px,1px)}92%{transform:translate(2px,-1px)}96%{transform:translate(-1px,0)}}
+    @keyframes glB{0%,82%,100%{transform:translate(0)}84%{transform:translate(3px,-1px)}89%{transform:translate(-2px,1px)}94%{transform:translate(1px,0)}}
+    .tx-sub{margin-top:.5rem;font-size:11px;letter-spacing:.1em;color:var(--muted)}
+
+    .div{height:1px;background:linear-gradient(90deg,var(--green),transparent 70%);opacity:.3;margin:0 0 1.5rem}
+
+    /* dossier */
+    .dossier{border:1px solid var(--line);background:var(--panel);padding:.9rem 1rem;margin-bottom:1.6rem}
+    .dossier-head{font-size:9px;letter-spacing:.2em;color:var(--cyan);margin-bottom:.6rem;text-shadow:0 0 8px rgba(0,229,255,.3)}
+    .drow{display:flex;justify-content:space-between;gap:1rem;font-size:11.5px;padding:.3rem 0;border-bottom:1px dashed var(--line)}
+    .drow:last-child{border-bottom:none}
+    .dkey{color:var(--muted);letter-spacing:.08em}
+    .redact{
+      background:#0e1613;color:transparent;border-radius:2px;padding:0 .3em;
+      cursor:default;transition:.25s;user-select:none;
     }
-    .tx-label {
-      font-size: 9px;
-      letter-spacing: .25em;
-      color: var(--muted);
-      margin-bottom: .6rem;
+    .redact:hover{background:transparent;color:#c7e6d8;user-select:text}
+
+    /* ledger / ticker */
+    .ledger-head{font-size:9px;letter-spacing:.2em;color:var(--cyan);margin-bottom:.6rem;text-shadow:0 0 8px rgba(0,229,255,.3)}
+    .rails{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);margin-bottom:1.8rem}
+    @media(max-width:480px){.rails{grid-template-columns:1fr}}
+    .rail{padding:.7rem .85rem;background:#010302;display:flex;justify-content:space-between;align-items:center}
+    .rail.btc{box-shadow:inset 0 2px 0 var(--btc)}
+    .rail.xmr{box-shadow:inset 0 2px 0 var(--xmr)}
+    .rail-name{font-size:9px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+    .rail-price{font-size:1.1rem;font-weight:500}
+    .rail.btc .rail-price{color:var(--btc);text-shadow:0 0 12px rgba(247,147,26,.35)}
+    .rail.xmr .rail-price{color:var(--xmr);text-shadow:0 0 12px rgba(255,102,0,.35)}
+    .rail-chg{font-size:10px;margin-left:.3rem}
+    .up{color:var(--green)}
+    .down{color:var(--red)}
+    .spark{width:60px;height:20px}
+
+    /* directory listing */
+    .log{margin-bottom:1.6rem}
+    .log-head{font-size:9px;letter-spacing:.2em;color:var(--cyan);margin-bottom:.5rem;text-shadow:0 0 8px rgba(0,229,255,.3)}
+    .log-path{font-size:10px;color:var(--muted);margin-bottom:.6rem;letter-spacing:.04em}
+    .entry{
+      display:grid;grid-template-columns:16px 46px 1fr;gap:.55rem;
+      padding:.5rem .4rem;border-bottom:1px solid var(--line);
+      font-size:12px;line-height:1.45;transition:.15s;
     }
-    .tx-title {
-      font-size: clamp(1.6rem, 5.5vw, 2.1rem);
-      letter-spacing: .14em;
-      color: #e8eef6;
-      position: relative;
-      display: inline-block;
-      text-transform: uppercase;
+    .entry:hover{background:var(--green-soft)}
+    .entry:last-child{border-bottom:none}
+    .eperm{color:var(--muted);opacity:.6;font-size:10px;padding-top:.15rem}
+    .eid{color:var(--green);opacity:.75;font-size:10px;letter-spacing:.05em;padding-top:.15rem}
+    .ename{color:#d8f3e6;letter-spacing:.03em}
+    .entry:hover .ename{color:var(--green);text-shadow:0 0 6px rgba(0,255,127,.4)}
+    .edesc{color:var(--muted);font-size:11px;margin-top:.1rem}
+
+    /* pipeline */
+    .pipe{
+      display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;
+      font-size:10px;letter-spacing:.08em;color:#9fc5b3;
+      margin-bottom:1.6rem;padding:.8rem 0;
+      border-top:1px solid var(--line);border-bottom:1px solid var(--line);
     }
-    .tx-title::before,
-    .tx-title::after {
-      content: attr(data-text);
-      position: absolute;
-      left: 0; top: 0;
-      width: 100%;
-      overflow: hidden;
-      pointer-events: none;
-    }
-    .tx-title::before {
-      color: var(--cyan);
-      clip-path: inset(0 0 50% 0);
-      transform: translate(-2px, 0);
-      opacity: .9;
-      animation: glA 2.3s infinite linear alternate-reverse;
-      text-shadow: -2px 0 var(--cyan), 0 0 20px rgba(0,246,255,.45);
-    }
-    .tx-title::after {
-      color: #6b8cff;
-      clip-path: inset(50% 0 0 0);
-      transform: translate(2px, 0);
-      opacity: .85;
-      animation: glB 1.9s infinite linear alternate-reverse;
-      text-shadow: 2px 0 #6b8cff;
-    }
-    @keyframes glA {
-      0%, 86%, 100% { transform: translate(0); }
-      88% { transform: translate(-3px, 1px); }
-      92% { transform: translate(2px, -1px); }
-      96% { transform: translate(-1px, 0); }
-    }
-    @keyframes glB {
-      0%, 82%, 100% { transform: translate(0); }
-      84% { transform: translate(3px, -1px); }
-      89% { transform: translate(-2px, 1px); }
-      94% { transform: translate(1px, 0); }
-    }
-    .tx-sub {
-      margin-top: .5rem;
-      font-size: 11px;
-      letter-spacing: .12em;
-      color: var(--muted);
-    }
-    .div {
-      height: 1px;
-      background: linear-gradient(90deg, var(--cyan), transparent 70%);
-      opacity: .35;
-      margin: 0 0 1.4rem;
-    }
-    .log {
-      margin-bottom: 1.6rem;
-    }
-    .log-head {
-      font-size: 9px;
-      letter-spacing: .2em;
-      color: var(--cyan);
-      margin-bottom: .7rem;
-      text-shadow: 0 0 8px rgba(0,246,255,.3);
-    }
-    .entry {
-      display: grid;
-      grid-template-columns: 42px 1fr;
-      gap: .6rem;
-      padding: .45rem 0;
-      border-bottom: 1px solid #0e141c;
-      font-size: 12px;
-      line-height: 1.45;
-    }
-    .entry:last-child { border-bottom: none; }
-    .eid {
-      color: var(--cyan);
-      opacity: .7;
-      font-size: 10px;
-      letter-spacing: .06em;
-      padding-top: .15rem;
-    }
-    .ename {
-      color: #d0d8e4;
-      letter-spacing: .04em;
-    }
-    .edesc {
-      color: var(--muted);
-      font-size: 11px;
-      margin-top: .1rem;
-    }
-    .proto {
-      display: flex;
-      flex-wrap: wrap;
-      gap: .35rem .9rem;
-      font-size: 10px;
-      letter-spacing: .1em;
-      color: var(--muted);
-      margin-bottom: 1.5rem;
-      padding: .7rem 0;
-      border-top: 1px solid #0e141c;
-      border-bottom: 1px solid #0e141c;
-    }
-    .proto span::before {
-      content: "› ";
-      color: var(--cyan);
-      opacity: .5;
-    }
-    .note {
-      font-size: 11px;
-      color: #3a4a5a;
-      letter-spacing: .06em;
-      line-height: 1.6;
-      margin-bottom: 1.5rem;
-    }
-    .note em {
-      font-style: normal;
-      color: #7a8a9a;
-    }
-    .end {
-      font-size: 9px;
-      letter-spacing: .2em;
-      color: #1a2230;
-      text-align: center;
-    }
-    .frame::before,
-    .frame::after {
-      content: "";
-      position: absolute;
-      width: 18px;
-      height: 18px;
-      border-color: rgba(0,246,255,.25);
-      pointer-events: none;
-    }
-    .frame::before {
-      top: 8px; left: 8px;
-      border-top: 1px solid;
-      border-left: 1px solid;
-    }
-    .frame::after {
-      bottom: 8px; right: 8px;
-      border-bottom: 1px solid;
-      border-right: 1px solid;
+    .pipe-step{border:1px solid var(--line);padding:.35rem .6rem;background:var(--panel)}
+    .pipe-arrow{color:var(--green);opacity:.6}
+
+    .note{font-size:11px;color:#31473d;letter-spacing:.05em;line-height:1.7;margin-bottom:1.6rem}
+    .note em{font-style:normal;color:#6b8c7c}
+
+    .end{font-size:9px;letter-spacing:.22em;color:#12241c;text-align:center}
+    .end .cur{display:inline-block;width:6px;height:.9em;background:#12241c;margin-left:2px;vertical-align:-1px;animation:blink 1.2s steps(1) infinite}
+
+    @media (prefers-reduced-motion:reduce){
+      *{animation-duration:.001s !important;animation-iteration-count:1 !important}
+      canvas#matrix{display:none}
     }
   </style>
 </head>
 <body>
+  <canvas id="matrix"></canvas>
   <div class="noise"></div>
   <div class="crt"></div>
 
-  <div class="frame">
-    <div class="status">
-      <a href="index.html">disconnect</a>
-      <div class="online">CHANNEL OPEN</div>
-    </div>
-
-    <div class="rails">
-      <div class="rail btc">
-        <div>
-          <div class="rail-name">Bitcoin</div>
-          <div>
-            <span class="rail-price" id="btc">—</span>
-            <span class="rail-chg" id="btc-c"></span>
-          </div>
-        </div>
-        <canvas class="spark" id="c-btc" width="60" height="20"></canvas>
-      </div>
-      <div class="rail xmr">
-        <div>
-          <div class="rail-name">Monero</div>
-          <div>
-            <span class="rail-price" id="xmr">—</span>
-            <span class="rail-chg" id="xmr-c"></span>
-          </div>
-        </div>
-        <canvas class="spark" id="c-xmr" width="60" height="20"></canvas>
-      </div>
-    </div>
-
-    <div class="tx">
-      <div class="tx-label">// transmisión privada</div>
-      <div class="tx-title" data-text="nodo disponible">nodo disponible</div>
-      <div class="tx-sub">1:1 · alcance cerrado · sin rastro</div>
-    </div>
-
-    <div class="div"></div>
-
-    <div class="log">
-      <div class="log-head">módulos activos</div>
-
-      <div class="entry">
-        <div class="eid">0x01</div>
-        <div>
-          <div class="ename">THREAT MODEL</div>
-          <div class="edesc">superficie de ataque · quién y por dónde</div>
-        </div>
-      </div>
-      <div class="entry">
-        <div class="eid">0x02</div>
-        <div>
-          <div class="ename">HARDENING</div>
-          <div class="edesc">sistemas · hábitos · setup real</div>
-        </div>
-      </div>
-      <div class="entry">
-        <div class="eid">0x03</div>
-        <div>
-          <div class="ename">SECURE COMMS</div>
-          <div class="edesc">canales resistentes a vigilancia</div>
-        </div>
-      </div>
-      <div class="entry">
-        <div class="eid">0x04</div>
-        <div>
-          <div class="ename">OPSEC REVIEW</div>
-          <div class="edesc">fugas actuales · cómo cortarlas</div>
-        </div>
-      </div>
-      <div class="entry">
-        <div class="eid">0x05</div>
-        <div>
-          <div class="ename">IDENTITY</div>
-          <div class="edesc">huella pública · separación de contextos</div>
-        </div>
-      </div>
-      <div class="entry">
-        <div class="eid">0x06</div>
-        <div>
-          <div class="ename">CUSTOM</div>
-          <div class="edesc">lo que haga falta · se define en privado</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="proto">
-      <span>contacto</span>
-      <span>alcance</span>
-      <span>anticipo</span>
-      <span>ejecución</span>
-    </div>
-
-    <p class="note">
-      Sin paquetes. Sin intermediarios. Sin registros.<br>
-      <em>Solo si el alcance está claro.</em>
-    </p>
-
-    <div class="end">NOINDEX · NO LOGS · NO TRACE</div>
+  <div id="boot-screen">
+    <pre id="boot-text"></pre>
   </div>
+  <div class="skip-hint" id="skip-hint">pulsa cualquier tecla para omitir</div>
+
+  <main id="main">
+    <div class="frame">
+      <div class="status">
+        <a href="index.html">← disconnect</a>
+        <div class="online">CHANNEL OPEN</div>
+      </div>
+
+      <div class="sysbar">
+        <span>SESSION <b id="sid">0x--------</b></span>
+        <span>UPTIME <b id="uptime">00:00:00</b></span>
+        <span>THREAT LEVEL <b style="color:var(--green)">NOMINAL</b></span>
+      </div>
+
+      <div class="tx">
+        <div class="tx-label">// transmisión privada</div>
+        <div class="tx-title" data-text="nodo disponible">nodo disponible</div>
+        <div class="tx-sub">1:1 · alcance cerrado · sin rastro</div>
+      </div>
+
+      <div class="div"></div>
+
+      <div class="dossier">
+        <div class="dossier-head">expediente</div>
+        <div class="drow"><span class="dkey">operador</span><span>stark_privacy</span></div>
+        <div class="drow"><span class="dkey">cliente</span><span class="redact">pasa el cursor</span></div>
+        <div class="drow"><span class="dkey">alcance</span><span class="redact">se define en canal privado</span></div>
+      </div>
+
+      <div class="ledger-head">ledger // on-chain</div>
+      <div class="rails">
+        <div class="rail btc">
+          <div>
+            <div class="rail-name">Bitcoin</div>
+            <div><span class="rail-price" id="btc">—</span><span class="rail-chg" id="btc-c"></span></div>
+          </div>
+          <canvas class="spark" id="c-btc" width="60" height="20"></canvas>
+        </div>
+        <div class="rail xmr">
+          <div>
+            <div class="rail-name">Monero</div>
+            <div><span class="rail-price" id="xmr">—</span><span class="rail-chg" id="xmr-c"></span></div>
+          </div>
+          <canvas class="spark" id="c-xmr" width="60" height="20"></canvas>
+        </div>
+      </div>
+
+      <div class="log">
+        <div class="log-head">módulos activos</div>
+        <div class="log-path">~/ops/ $ ls -la</div>
+
+        <div class="entry"><div class="eperm">rwx</div><div class="eid">0x01</div><div><div class="ename">THREAT_MODEL</div><div class="edesc">superficie de ataque · quién y por dónde</div></div></div>
+        <div class="entry"><div class="eperm">rwx</div><div class="eid">0x02</div><div><div class="ename">HARDENING</div><div class="edesc">sistemas · hábitos · setup real</div></div></div>
+        <div class="entry"><div class="eperm">rwx</div><div class="eid">0x03</div><div><div class="ename">SECURE_COMMS</div><div class="edesc">canales resistentes a vigilancia</div></div></div>
+        <div class="entry"><div class="eperm">rwx</div><div class="eid">0x04</div><div><div class="ename">OPSEC_REVIEW</div><div class="edesc">fugas actuales · cómo cortarlas</div></div></div>
+        <div class="entry"><div class="eperm">rwx</div><div class="eid">0x05</div><div><div class="ename">IDENTITY</div><div class="edesc">huella pública · separación de contextos</div></div></div>
+        <div class="entry"><div class="eperm">r-x</div><div class="eid">0x06</div><div><div class="ename">CUSTOM</div><div class="edesc">lo que haga falta · se define en privado</div></div></div>
+      </div>
+
+      <div class="pipe">
+        <span class="pipe-step">01 · contacto</span><span class="pipe-arrow">→</span>
+        <span class="pipe-step">02 · alcance</span><span class="pipe-arrow">→</span>
+        <span class="pipe-step">03 · anticipo</span><span class="pipe-arrow">→</span>
+        <span class="pipe-step">04 · ejecución</span>
+      </div>
+
+      <p class="note">
+        Sin paquetes. Sin intermediarios. Sin registros.<br>
+        <em>Solo si el alcance está claro.</em>
+      </p>
+
+      <div class="end">NOINDEX · NO LOGS · NO TRACE<span class="cur"></span></div>
+    </div>
+  </main>
 
   <script>
+    // matrix rain
+    (function(){
+      const cv=document.getElementById('matrix');
+      const ctx=cv.getContext('2d');
+      let w,h,cols,drops;
+      const glyphs='アイウエオカキクケコサシスセソ0123456789ABCDEF$#%&';
+      function setup(){
+        w=cv.width=innerWidth; h=cv.height=innerHeight;
+        cols=Math.floor(w/16);
+        drops=Array(cols).fill(0).map(()=>Math.random()*-40);
+      }
+      setup();
+      window.addEventListener('resize',setup);
+      const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if(!reduce){
+        setInterval(()=>{
+          ctx.fillStyle='rgba(0,0,0,.09)';
+          ctx.fillRect(0,0,w,h);
+          ctx.fillStyle='#00ff7f';
+          ctx.font='14px monospace';
+          drops.forEach((y,i)=>{
+            const ch=glyphs[Math.floor(Math.random()*glyphs.length)];
+            ctx.fillText(ch,i*16,y*16);
+            if(y*16>h && Math.random()>.975) drops[i]=0;
+            drops[i]++;
+          });
+        },45);
+      }
+    })();
+
+    // boot sequence
+    (function(){
+      const screen=document.getElementById('boot-screen');
+      const txt=document.getElementById('boot-text');
+      const skipHint=document.getElementById('skip-hint');
+      const main=document.getElementById('main');
+      const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const lines=[
+        '> booting secure_shell.sh',
+        '> mounting encrypted volume ... OK',
+        '> negotiating handshake over Tor ... OK',
+        '> verifying peer identity: 0x0732E79E',
+        '> establishing channel — 1:1, no logs',
+        '> access: GRANTED'
+      ];
+      function reveal(){
+        screen.classList.add('hide');
+        skipHint.style.display='none';
+        main.classList.add('show');
+        setTimeout(()=>screen.remove(),550);
+      }
+      if(reduce){ reveal(); return; }
+      let li=0,ci=0;
+      function type(){
+        if(li>=lines.length){ setTimeout(reveal,350); return; }
+        const line=lines[li];
+        if(ci<=line.length){
+          txt.innerHTML=lines.slice(0,li).join('\n')+(li>0?'\n':'')+line.slice(0,ci)+'<span class="cur"></span>';
+          ci++;
+          setTimeout(type, 16+Math.random()*22);
+        }else{
+          li++; ci=0;
+          setTimeout(type, 160);
+        }
+      }
+      type();
+      window.addEventListener('keydown',reveal,{once:true});
+      screen.addEventListener('click',reveal,{once:true});
+    })();
+
+    // session id + uptime
+    (function(){
+      document.getElementById('sid').textContent='0x'+Math.random().toString(16).slice(2,10).toUpperCase();
+      const start=Date.now();
+      const up=document.getElementById('uptime');
+      setInterval(()=>{
+        const s=Math.floor((Date.now()-start)/1000);
+        const hh=String(Math.floor(s/3600)).padStart(2,'0');
+        const mm=String(Math.floor((s%3600)/60)).padStart(2,'0');
+        const ss=String(s%60).padStart(2,'0');
+        up.textContent=hh+':'+mm+':'+ss;
+      },1000);
+    })();
+
+    // live prices
     async function prices() {
       try {
         const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,monero&vs_currencies=usd&include_24hr_change=true');
