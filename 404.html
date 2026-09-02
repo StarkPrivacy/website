@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 — ruta no encontrada</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root { --c:#00e5ff; --dim:#6b7c8d; --bg:#05070a; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html, body { height:100%; }
+    body {
+      font-family:'Share Tech Mono','IBM Plex Mono',ui-monospace,monospace;
+      background:var(--bg); color:#c5d0da;
+      min-height:100vh; display:grid; place-items:center;
+      overflow:hidden;
+    }
+    body::before {
+      content:""; position:fixed; inset:0; pointer-events:none; z-index:3;
+      background:repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.18) 3px);
+      opacity:.45;
+    }
+    body::after {
+      content:""; position:fixed; inset:0; pointer-events:none; z-index:4;
+      background:radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,.55) 100%);
+    }
+    .noise {
+      position:fixed; inset:0; pointer-events:none; z-index:2; opacity:.04;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    .frame {
+      position:relative; z-index:5;
+      width:min(560px, 90vw);
+      border:1px solid #1c2a36;
+      background:#080c12;
+      padding:2rem 1.75rem 1.6rem;
+      box-shadow:0 0 0 1px #0b1218, 0 30px 80px rgba(0,0,0,.55);
+    }
+    .frame::before, .frame::after {
+      content:""; position:absolute; width:12px; height:12px; border-color:#2a3d4d; border-style:solid;
+    }
+    .frame::before { top:-1px; left:-1px; border-width:1px 0 0 1px; }
+    .frame::after { bottom:-1px; right:-1px; border-width:0 1px 1px 0; }
+    .hdr {
+      display:flex; justify-content:space-between; align-items:center;
+      font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; color:var(--dim);
+      margin-bottom:1.4rem;
+    }
+    .dot { width:7px; height:7px; border-radius:50%; background:var(--c); box-shadow:0 0 8px var(--c); display:inline-block; margin-right:.4rem; }
+    h1 {
+      font-size:clamp(3.2rem, 12vw, 5.2rem); font-weight:400; letter-spacing:.08em;
+      color:var(--c); line-height:1; margin-bottom:.35rem;
+      text-shadow:2px 0 #ff2a6d, -2px 0 #00e5ff;
+      animation:glitch 3.2s infinite linear alternate-reverse;
+    }
+    @keyframes glitch {
+      0%,86%,100% { text-shadow:2px 0 #ff2a6d, -2px 0 #00e5ff; transform:translate(0); }
+      88% { text-shadow:-2px 0 #ff2a6d, 2px 0 #00e5ff; transform:translate(-2px,1px); }
+      92% { text-shadow:2px 0 #ff2a6d, -3px 0 #00e5ff; transform:translate(2px,-1px); }
+    }
+    .code { color:var(--c); font-size:.78rem; letter-spacing:.16em; margin-bottom:1.1rem; }
+    p { color:var(--dim); font-size:.86rem; line-height:1.7; margin-bottom:1.5rem; }
+    p strong { color:#d7e2ec; font-weight:500; }
+    .log { font-size:.75rem; color:#4d5e6e; margin-bottom:1.6rem; }
+    .log span { color:var(--c); }
+    .actions { display:flex; gap:.6rem; flex-wrap:wrap; }
+    a.btn {
+      display:inline-flex; align-items:center; gap:.4rem;
+      border:1px solid #2a3d4d; color:#d7e2ec;
+      padding:.55rem 1rem; font-size:.78rem; letter-spacing:.06em;
+    }
+    a.btn.pri { border-color:var(--c); color:var(--c); }
+    a.btn:hover { background:rgba(0,229,255,.06); }
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="frame">
+    <div class="hdr">
+      <span><i class="dot"></i>NODE // STARK</span>
+      <span>ERR_NOT_FOUND</span>
+    </div>
+    <div class="code">HTTP 404</div>
+    <h1>404</h1>
+    <p>Esta ruta no existe en el nodo. O nunca existió, o alguien la movió. <strong>No hay nada que indexar aquí.</strong></p>
+    <div class="log">
+      <div><span>></span> lookup path … miss</div>
+      <div><span>></span> no redirect · no mirror</div>
+      <div><span>></span> return home</div>
+    </div>
+    <div class="actions">
+      <a class="btn pri" href="./">volver al inicio</a>
+      <a class="btn" href="https://boringprivacy.io" target="_blank" rel="noopener">academia</a>
+    </div>
+  </div>
+</body>
+</html>
