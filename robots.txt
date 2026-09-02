@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /services.html
+
+Sitemap: https://starkprivacy.github.io/website/sitemap.xml

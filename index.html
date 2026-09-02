@@ -5,6 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Stark Privacy — Sin privacidad tu libertad es solo una ilusión</title>
   <meta name="description" content="Divulgador de privacidad digital. Fundador de Boring Privacy y privacidad/me.">
+  <link rel="canonical" href="https://starkprivacy.github.io/website/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Stark Privacy — Sin privacidad tu libertad es solo una ilusión">
+  <meta property="og:description" content="Divulgador de privacidad digital. Fundador de Boring Privacy y privacidad/me.">
+  <meta property="og:url" content="https://starkprivacy.github.io/website/">
+  <meta property="og:image" content="https://starkprivacy.github.io/website/assets/hero-stage.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Stark Privacy — Sin privacidad tu libertad es solo una ilusión">
+  <meta name="twitter:description" content="Divulgador de privacidad digital. Fundador de Boring Privacy y privacidad/me.">
+  <meta name="twitter:image" content="https://starkprivacy.github.io/website/assets/hero-stage.jpg">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -14,14 +25,20 @@
   <nav id="nav">
     <div class="container nav-inner">
       <a href="#" class="logo">Stark <span>/privacy</span></a>
-      <ul class="nav-links">
+      <ul class="nav-links" id="nav-links">
         <li><a href="#destacados">Proyectos</a></li>
         <li><a href="#sobre">Sobre mí</a></li>
         <li><a href="#contenido">Contenido</a></li>
         <li><a href="#empresas">Empresas</a></li>
         <li><a href="#donaciones">Donaciones</a></li>
       </ul>
-      <a href="https://privtr.ee/@boringprivacy" class="nav-cta" target="_blank" rel="noopener">Academia</a>
+      <div style="display:flex;align-items:center;gap:.6rem">
+        <a href="https://privtr.ee/@boringprivacy" class="nav-cta" target="_blank" rel="noopener">Academia</a>
+        <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Abrir menú">
+          <svg class="icon-open" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          <svg class="icon-close" viewBox="0 0 24 24"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+        </button>
+      </div>
     </div>
   </nav>
   <header class="hero">
@@ -173,6 +190,18 @@
   <script>
     const nav=document.getElementById('nav');
     window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>20));
+    const navToggle=document.getElementById('nav-toggle');
+    const navLinks=document.getElementById('nav-links');
+    navToggle.addEventListener('click',()=>{
+      const open=navLinks.classList.toggle('is-open');
+      navToggle.setAttribute('aria-expanded',open?'true':'false');
+      navToggle.setAttribute('aria-label',open?'Cerrar menú':'Abrir menú');
+    });
+    navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
+      navLinks.classList.remove('is-open');
+      navToggle.setAttribute('aria-expanded','false');
+      navToggle.setAttribute('aria-label','Abrir menú');
+    }));
     const boletin=document.getElementById('boletin');
     const form=document.getElementById('boletin-form');
     const q=document.getElementById('captcha-q');
@@ -191,6 +220,6 @@
     });
     fetch('https://discord.com/api/v9/invites/cax9UWtk2D?with_counts=true').then(r=>r.json()).then(d=>{const el=document.querySelector('[data-net="dc"]');if(el&&d.approximate_member_count){const n=Math.max(100,Math.floor(d.approximate_member_count/100)*100);el.textContent='+'+n+' miembros';}}).catch(()=>{});
   </script>
-  <a href="services.html" class="paper-egg" title="" aria-label=" "></a>
+  <a href="services.html" class="paper-egg" aria-hidden="true" tabindex="-1"></a>
 </body>
 </html>
