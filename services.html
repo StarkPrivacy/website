@@ -6,233 +6,170 @@
   <title>·</title>
   <meta name="robots" content="noindex, nofollow, noarchive">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#05010a;
-      --panel:rgba(10,6,24,.55);
-      --line:rgba(0,229,255,.28);
-      --cyan:#00e5ff;
-      --magenta:#ff2bd6;
-      --violet:#7a5cff;
-      --text:#eef2fb;
-      --muted:#93a0c2;
+      --bg:#060708;
+      --panel:#0d1117;
+      --border:#1c2530;
+      --border-soft:#161d27;
+      --text:#f2f5fa;
+      --muted:#8b9bb0;
+      --accent:#3b82f6;
+      --accent-soft:rgba(59,130,246,.12);
       --btc:#f7931a;
       --xmr:#ff6600;
-      --green:#00ff9d;
-      --red:#ff4d6a;
-      --font:'Share Tech Mono',ui-monospace,monospace;
-      --disp:'Orbitron',var(--font);
+      --green:#22c55e;
+      --red:#ef4444;
+      --sans:'Inter',system-ui,sans-serif;
+      --mono:'JetBrains Mono',ui-monospace,monospace;
     }
     *{margin:0;padding:0;box-sizing:border-box}
     html,body{height:100%}
     body{
-      font-family:var(--font);
-      background:var(--bg);
-      color:var(--text);
-      height:100dvh;
-      overflow:hidden;
-      display:flex;
-      flex-direction:column;
+      font-family:var(--sans);background:var(--bg);color:var(--text);
+      height:100dvh;overflow:hidden;-webkit-font-smoothing:antialiased;
+      display:flex;flex-direction:column;
     }
-    ::selection{background:var(--cyan);color:#000}
-
-    /* cyberpunk backdrop: neon perspective grid + glow haze, no matrix/terminal roleplay */
-    .backdrop{position:fixed;inset:0;z-index:0;overflow:hidden}
-    .glow{position:absolute;border-radius:50%;filter:blur(70px);opacity:.35}
-    .glow.a{width:38vw;height:38vw;background:var(--magenta);top:-12vw;left:-8vw}
-    .glow.b{width:32vw;height:32vw;background:var(--cyan);bottom:-10vw;right:-6vw}
-    .grid-floor{
-      position:absolute;left:0;right:0;bottom:0;height:55%;
-      background-image:
-        linear-gradient(rgba(0,229,255,.35) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(0,229,255,.35) 1px,transparent 1px);
-      background-size:100% 7%, 6% 100%;
-      transform:perspective(280px) rotateX(58deg);
-      transform-origin:bottom;
-      opacity:.4;
-      mask-image:linear-gradient(to top,#000 20%,transparent 92%);
-    }
-    .scan{position:fixed;inset:0;z-index:50;pointer-events:none;
-      background:repeating-linear-gradient(0deg,transparent 0,transparent 2px,rgba(0,0,0,.22) 2px,rgba(0,0,0,.22) 4px);
-    }
-    .vig{position:fixed;inset:0;z-index:49;pointer-events:none;
-      background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.7) 100%);
-    }
-
-    @keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
-    @keyframes glA{0%,86%,100%{transform:translate(0)}88%{transform:translate(-3px,1px)}92%{transform:translate(2px,-1px)}96%{transform:translate(-1px,0)}}
-    @keyframes glB{0%,82%,100%{transform:translate(0)}84%{transform:translate(3px,-1px)}89%{transform:translate(-2px,1px)}94%{transform:translate(1px,0)}}
+    a{color:inherit;text-decoration:none}
 
     .stage{
-      position:relative;z-index:1;
-      height:100%;width:min(1180px,96vw);margin:0 auto;
+      height:100%;width:min(1200px,96vw);margin:0 auto;
       display:flex;flex-direction:column;
-      padding:clamp(.6rem,2.2vh,1.4rem) clamp(.9rem,2.4vw,1.6rem);
-      gap:clamp(.5rem,1.6vh,1.1rem);
+      padding:clamp(.7rem,2.4vh,1.5rem) clamp(1rem,2.6vw,1.8rem);
+      gap:clamp(.6rem,1.8vh,1.2rem);
     }
 
-    .topbar{display:flex;justify-content:space-between;align-items:center;flex:0 0 auto}
-    .topbar a{color:var(--muted);text-decoration:none;font-size:clamp(10px,1.3vh,12px);letter-spacing:.14em}
-    .topbar a:hover{color:var(--cyan)}
-    .tag{font-size:clamp(9px,1.1vh,11px);letter-spacing:.22em;color:var(--cyan);border:1px solid var(--line);padding:.25em .8em;border-radius:999px;background:rgba(0,229,255,.06)}
+    .topbar{flex:0 0 auto;display:flex;justify-content:space-between;align-items:center}
+    .brand{font-weight:700;font-size:clamp(12px,1.5vh,14px);letter-spacing:-.01em}
+    .brand span{color:var(--accent);font-family:var(--mono);font-weight:500}
+    .topbar a.back{color:var(--muted);font-size:clamp(11px,1.3vh,12.5px)}
+    .topbar a.back:hover{color:var(--text)}
 
-    .hero{flex:0 0 auto;text-align:center;padding:clamp(.2rem,1vh,.6rem) 0}
-    .eyebrow{font-size:clamp(10px,1.3vh,12px);letter-spacing:.3em;color:var(--muted);margin-bottom:.4em}
-    .title{
-      font-family:var(--disp);font-weight:800;text-transform:uppercase;
-      font-size:clamp(1.5rem,5.4vh,3rem);letter-spacing:.05em;line-height:1;
-      position:relative;display:inline-block;color:#fff;
-    }
-    .title::before,.title::after{content:attr(data-text);position:absolute;left:0;top:0;width:100%;overflow:hidden}
-    .title::before{color:var(--cyan);clip-path:inset(0 0 55% 0);transform:translate(-2px,0);opacity:.85;animation:glA 2.6s infinite linear alternate-reverse;text-shadow:0 0 18px var(--cyan)}
-    .title::after{color:var(--magenta);clip-path:inset(50% 0 0 0);transform:translate(2px,0);opacity:.8;animation:glB 2.1s infinite linear alternate-reverse;text-shadow:0 0 18px var(--magenta)}
-    .subtitle{margin-top:.5em;font-size:clamp(12px,1.6vh,14.5px);color:var(--muted);letter-spacing:.03em}
-
-    .main{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:1.3fr 1fr;gap:clamp(.6rem,1.8vw,1.2rem)}
-    @media (max-width:760px){.main{grid-template-columns:1fr;overflow-y:auto}}
-
-    .panel{
-      background:var(--panel);border:1px solid var(--line);border-radius:14px;
-      padding:clamp(.6rem,1.8vh,1.1rem) clamp(.7rem,1.6vw,1.2rem);
-      backdrop-filter:blur(6px);
-      display:flex;flex-direction:column;min-height:0;
-    }
-    .panel-head{
-      font-family:var(--disp);font-size:clamp(10px,1.3vh,12px);letter-spacing:.22em;
-      color:var(--cyan);text-shadow:0 0 10px rgba(0,229,255,.5);margin-bottom:clamp(.4rem,1.2vh,.7rem);
-      flex:0 0 auto;
+    .grid{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:.95fr 1.15fr;gap:clamp(1rem,2.6vw,2rem)}
+    @media(max-width:820px){
+      .grid{display:block;overflow-y:auto;padding-bottom:1rem}
+      .hero{display:block;padding:1.2rem 0}
+      .right{display:block}
+      .section-label{margin-bottom:.6rem}
+      .modules{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:auto;height:auto;margin-bottom:.75rem}
+      .bottom{display:grid;grid-template-columns:1fr;gap:.6rem}
+      .card{min-height:0}
     }
 
-    .modules{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,1fr);gap:clamp(.4rem,1vh,.65rem)}
-    .mod{
-      border:1px solid rgba(255,255,255,.08);border-radius:10px;
-      padding:clamp(.4rem,1.1vh,.65rem) clamp(.5rem,1vw,.75rem);
-      background:linear-gradient(160deg,rgba(122,92,255,.10),rgba(0,229,255,.04));
-      display:flex;flex-direction:column;justify-content:center;gap:.15em;
-      transition:.2s;
-    }
-    .mod:hover{border-color:var(--cyan);box-shadow:0 0 16px rgba(0,229,255,.25)}
-    .mod-id{font-family:var(--disp);font-size:clamp(9px,1vh,10.5px);color:var(--magenta);letter-spacing:.1em}
-    .mod-name{font-weight:700;font-size:clamp(12px,1.55vh,14.5px);color:#fff;letter-spacing:.02em}
-    .mod-desc{font-size:clamp(10px,1.25vh,11.5px);color:var(--muted);line-height:1.3}
+    /* LEFT: hero */
+    .hero{display:flex;flex-direction:column;justify-content:center;min-height:0}
+    .eyebrow{font-family:var(--mono);font-size:clamp(9.5px,1.15vh,11px);letter-spacing:.16em;color:var(--muted);text-transform:uppercase;margin-bottom:clamp(.5rem,1.6vh,1rem)}
+    .eyebrow b{color:var(--accent);font-weight:500}
+    h1{font-size:clamp(1.7rem,4.6vh,2.7rem);font-weight:800;letter-spacing:-.03em;line-height:1.08;margin-bottom:clamp(.7rem,1.8vh,1.1rem)}
+    h1 em{font-style:normal;color:var(--accent)}
+    .rule{width:56px;height:3px;background:var(--accent);margin-bottom:clamp(.7rem,1.8vh,1.1rem);border-radius:2px}
+    .lead{font-size:clamp(12.5px,1.55vh,14.5px);color:var(--muted);line-height:1.6;max-width:44ch;margin-bottom:clamp(.9rem,2.2vh,1.4rem)}
+    .ctas{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:clamp(1rem,2.6vh,1.6rem)}
+    .btn{font-family:var(--mono);font-size:clamp(10.5px,1.25vh,12px);font-weight:500;letter-spacing:.04em;padding:.75em 1.3em;border-radius:999px;display:inline-flex;align-items:center;gap:.5em}
+    .btn-solid{background:var(--accent);color:#fff}
+    .btn-solid:hover{background:#2563eb}
+    .btn-outline{border:1px solid var(--border);color:var(--text)}
+    .btn-outline:hover{border-color:var(--accent);color:var(--accent)}
 
-    .side{display:flex;flex-direction:column;gap:clamp(.5rem,1.6vh,1rem);min-height:0}
+    .features{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+    .feature{display:flex;align-items:center;gap:.6em;border:1px solid var(--border);border-radius:9px;padding:.6em .8em;background:var(--panel)}
+    .feature i{width:26px;height:26px;flex:0 0 auto;border-radius:6px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-family:var(--mono);font-size:12px;font-style:normal}
+    .feature span{font-size:clamp(10px,1.2vh,11.5px);font-weight:600;letter-spacing:.03em;text-transform:uppercase}
 
-    .flow{display:flex;flex-direction:column;gap:clamp(.35rem,.9vh,.55rem);flex:0 0 auto}
-    .flow-row{display:flex;align-items:center;gap:.6em}
-    .flow-n{
-      font-family:var(--disp);font-size:clamp(10px,1.2vh,12px);color:#000;background:var(--cyan);
-      width:1.7em;height:1.7em;border-radius:50%;display:grid;place-items:center;flex:0 0 auto;
-      box-shadow:0 0 12px rgba(0,229,255,.6);
-    }
-    .flow-label{font-size:clamp(11px,1.4vh,13px);color:var(--text);letter-spacing:.03em}
-    .flow-line{width:1px;height:clamp(6px,1.2vh,10px);background:linear-gradient(var(--cyan),transparent);margin-left:.85em}
+    /* RIGHT: modules + process + payment */
+    .right{display:flex;flex-direction:column;min-height:0;gap:clamp(.6rem,1.6vh,1rem)}
+    .section-label{display:flex;align-items:center;gap:.6em;flex:0 0 auto}
+    .section-label .num{font-family:var(--mono);font-size:clamp(9px,1.1vh,10.5px);color:var(--accent)}
+    .section-label .txt{font-size:clamp(10px,1.2vh,11.5px);font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+    .section-label .line{flex:1;height:1px;background:var(--border)}
 
-    .ticker{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;gap:clamp(.5rem,1.4vh,.8rem)}
-    .coin{display:flex;justify-content:space-between;align-items:center;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:clamp(.45rem,1.2vh,.7rem) clamp(.6rem,1.2vw,.9rem);background:rgba(255,255,255,.02)}
-    .coin.btc{box-shadow:inset 3px 0 0 var(--btc)}
-    .coin.xmr{box-shadow:inset 3px 0 0 var(--xmr)}
-    .coin-name{font-size:clamp(9px,1.05vh,10.5px);letter-spacing:.16em;color:var(--muted);text-transform:uppercase}
-    .coin-price{font-family:var(--disp);font-size:clamp(15px,2vh,19px);font-weight:700}
-    .coin.btc .coin-price{color:var(--btc);text-shadow:0 0 10px rgba(247,147,26,.4)}
-    .coin.xmr .coin-price{color:var(--xmr);text-shadow:0 0 10px rgba(255,102,0,.4)}
-    .coin-chg{font-size:clamp(10px,1.2vh,12px);margin-left:.5em}
+    .modules{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:1fr 1fr;gap:clamp(.5rem,1.2vh,.75rem)}
+    @media(max-width:820px){.modules{grid-template-columns:1fr 1fr;grid-template-rows:auto}}
+    .card{border:1px solid var(--border);border-radius:11px;padding:clamp(.6rem,1.4vh,.85rem);background:var(--panel);display:flex;flex-direction:column;gap:.35em;transition:.2s}
+    .card:hover{border-color:var(--accent)}
+    .card .id{width:24px;height:24px;border:1px solid var(--border);border-radius:6px;display:grid;place-items:center;font-family:var(--mono);font-size:10px;color:var(--accent);margin-bottom:.15em}
+    .card h3{font-size:clamp(11.5px,1.4vh,13px);font-weight:700;letter-spacing:-.01em}
+    .card p{font-size:clamp(9.5px,1.15vh,11px);color:var(--muted);line-height:1.4}
+
+    .bottom{flex:0 0 auto;display:grid;grid-template-columns:1.15fr 1fr;gap:clamp(.6rem,1.4vw,1rem)}
+    @media(max-width:820px){.bottom{grid-template-columns:1fr}}
+
+    .process{border:1px solid var(--border);border-radius:11px;padding:clamp(.6rem,1.4vh,.9rem) clamp(.8rem,1.4vw,1.1rem);background:var(--panel);display:flex;flex-direction:column;justify-content:center}
+    .process .headline{font-size:clamp(11.5px,1.4vh,13px);font-weight:700;margin-bottom:.5em}
+    .steps{display:flex;flex-wrap:wrap;gap:.4em 0;font-size:clamp(10px,1.2vh,11.5px);color:var(--muted)}
+    .steps b{color:var(--text);font-weight:600}
+    .steps .sep{margin:0 .5em;color:var(--accent)}
+
+    .pay{border:1px solid var(--border);border-radius:11px;padding:clamp(.55rem,1.3vh,.8rem) clamp(.7rem,1.3vw,1rem);background:var(--panel);display:flex;flex-direction:column;justify-content:center;gap:.4em}
+    .coin{display:flex;justify-content:space-between;align-items:center}
+    .coin-name{font-family:var(--mono);font-size:clamp(9px,1.05vh,10.5px);color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+    .coin-price{font-family:var(--mono);font-weight:600;font-size:clamp(13px,1.6vh,15.5px)}
+    .coin.btc .coin-price{color:var(--btc)}
+    .coin.xmr .coin-price{color:var(--xmr)}
+    .coin-chg{font-size:clamp(9.5px,1.1vh,11px);margin-left:.4em}
     .up{color:var(--green)}
     .down{color:var(--red)}
-    .coin-spark{font-family:var(--disp);letter-spacing:1px;font-size:clamp(11px,1.4vh,14px);opacity:.85}
 
-    .note{flex:0 0 auto;text-align:center;font-size:clamp(10.5px,1.3vh,12px);color:var(--muted);line-height:1.5;letter-spacing:.02em}
-    .note b{color:var(--text);font-weight:600}
-
-    @media (prefers-reduced-motion:reduce){ *{animation-duration:.001s !important} }
+    .footnote{flex:0 0 auto;text-align:center;font-size:clamp(10px,1.2vh,11.5px);color:var(--muted)}
+    .footnote b{color:var(--text);font-weight:600}
   </style>
 </head>
 <body>
-  <div class="backdrop">
-    <div class="glow a"></div>
-    <div class="glow b"></div>
-    <div class="grid-floor"></div>
-  </div>
-  <div class="vig"></div>
-  <div class="scan"></div>
-
   <div class="stage">
     <div class="topbar">
-      <a href="index.html">← volver</a>
-      <span class="tag">ACCESO DIRECTO</span>
+      <div class="brand">Stark <span>/servicios</span></div>
+      <a href="index.html" class="back">← volver al inicio</a>
     </div>
 
-    <div class="hero">
-      <div class="eyebrow">canal privado · sin intermediarios</div>
-      <div class="title" data-text="Servicios">Servicios</div>
-      <div class="subtitle">Formación y auditoría a medida. Se define el alcance antes de nada.</div>
-    </div>
+    <div class="grid">
+      <div class="hero">
+        <div class="eyebrow">privado por defecto <b>·</b> pago en BTC / XMR</div>
+        <h1>Servicios <em>privados</em>,<br>sin intermediarios.</h1>
+        <div class="rule"></div>
+        <p class="lead">Formación y auditoría a medida para quien necesita privacidad real: trato directo, alcance cerrado antes de empezar y ejecución discreta.</p>
+        <div class="ctas">
+          <a href="#modulos" class="btn btn-solid">Ver módulos →</a>
+          <a href="https://t.me/StarkPrivacy" target="_blank" rel="noopener" class="btn btn-outline">Contacto</a>
+        </div>
+        <div class="features">
+          <div class="feature"><i>✓</i><span>Revisión previa</span></div>
+          <div class="feature"><i>₿</i><span>Pago BTC/XMR</span></div>
+          <div class="feature"><i>1:1</i><span>Trato directo</span></div>
+          <div class="feature"><i>∅</i><span>Sin registros</span></div>
+        </div>
+      </div>
 
-    <div class="main">
-      <div class="panel">
-        <div class="panel-head">módulos disponibles</div>
+      <div class="right">
+        <div class="section-label" id="modulos"><span class="num">01</span><span class="txt">Módulos</span><span class="line"></span></div>
         <div class="modules">
-          <div class="mod"><div class="mod-id">01</div><div class="mod-name">Threat Model</div><div class="mod-desc">Superficie de ataque: quién y por dónde.</div></div>
-          <div class="mod"><div class="mod-id">02</div><div class="mod-name">Hardening</div><div class="mod-desc">Sistemas, hábitos, setup real.</div></div>
-          <div class="mod"><div class="mod-id">03</div><div class="mod-name">Comunicaciones seguras</div><div class="mod-desc">Canales resistentes a vigilancia.</div></div>
-          <div class="mod"><div class="mod-id">04</div><div class="mod-name">Revisión OPSEC</div><div class="mod-desc">Fugas actuales y cómo cortarlas.</div></div>
-          <div class="mod"><div class="mod-id">05</div><div class="mod-name">Identidad</div><div class="mod-desc">Huella pública, separación de contextos.</div></div>
-          <div class="mod"><div class="mod-id">06</div><div class="mod-name">A medida</div><div class="mod-desc">Lo que haga falta, se define en privado.</div></div>
+          <div class="card"><div class="id">01</div><h3>Threat Model</h3><p>Superficie de ataque: quién y por dónde.</p></div>
+          <div class="card"><div class="id">02</div><h3>Hardening</h3><p>Sistemas, hábitos, setup real.</p></div>
+          <div class="card"><div class="id">03</div><h3>Comunicaciones seguras</h3><p>Canales resistentes a vigilancia.</p></div>
+          <div class="card"><div class="id">04</div><h3>Revisión OPSEC</h3><p>Fugas actuales y cómo cortarlas.</p></div>
+          <div class="card"><div class="id">05</div><h3>Identidad</h3><p>Huella pública, separación de contextos.</p></div>
+          <div class="card"><div class="id">06</div><h3>A medida</h3><p>Lo que haga falta, se define en privado.</p></div>
         </div>
-      </div>
 
-      <div class="side">
-        <div class="panel">
-          <div class="panel-head">cómo funciona</div>
-          <div class="flow">
-            <div class="flow-row"><div class="flow-n">1</div><div class="flow-label">Contacto</div></div>
-            <div class="flow-line"></div>
-            <div class="flow-row"><div class="flow-n">2</div><div class="flow-label">Se define el alcance</div></div>
-            <div class="flow-line"></div>
-            <div class="flow-row"><div class="flow-n">3</div><div class="flow-label">Anticipo</div></div>
-            <div class="flow-line"></div>
-            <div class="flow-row"><div class="flow-n">4</div><div class="flow-label">Ejecución</div></div>
+        <div class="bottom">
+          <div class="process">
+            <div class="headline">Alcance claro. Ejecución discreta.</div>
+            <div class="steps"><b>Contacto</b><span class="sep">→</span><b>Alcance definido</b><span class="sep">→</span><b>Anticipo</b><span class="sep">→</span><b>Ejecución</b></div>
           </div>
-        </div>
-
-        <div class="panel">
-          <div class="panel-head">pago · BTC / XMR</div>
-          <div class="ticker">
-            <div class="coin btc">
-              <div>
-                <div class="coin-name">Bitcoin</div>
-                <div><span class="coin-price" id="btc">···</span><span class="coin-chg" id="btc-c"></span></div>
-              </div>
-              <div class="coin-spark" id="btc-spark"></div>
-            </div>
-            <div class="coin xmr">
-              <div>
-                <div class="coin-name">Monero</div>
-                <div><span class="coin-price" id="xmr">···</span><span class="coin-chg" id="xmr-c"></span></div>
-              </div>
-              <div class="coin-spark" id="xmr-spark"></div>
-            </div>
+          <div class="pay">
+            <div class="coin btc"><span class="coin-name">Bitcoin</span><span><span class="coin-price" id="btc">···</span><span class="coin-chg" id="btc-c"></span></span></div>
+            <div class="coin xmr"><span class="coin-name">Monero</span><span><span class="coin-price" id="xmr">···</span><span class="coin-chg" id="xmr-c"></span></span></div>
           </div>
         </div>
       </div>
     </div>
 
-    <p class="note"><b>Sin paquetes. Sin intermediarios. Sin registros.</b> Solo si el alcance está claro.</p>
+    <p class="footnote"><b>Sin paquetes. Sin intermediarios. Sin registros.</b> Solo si el alcance está claro.</p>
   </div>
 
   <script>
-    function spark(pts){
-      const chars='▁▂▃▄▅▆▇█';
-      return pts.map(p=>chars[Math.min(7,Math.floor(p*8))]).join('');
-    }
-    const staticPts = {
-      btc:[0.38,0.44,0.41,0.49,0.47,0.54,0.51,0.57,0.59,0.56,0.62,0.65],
-      xmr:[0.48,0.45,0.51,0.47,0.43,0.49,0.46,0.53,0.5,0.56,0.54,0.59]
-    };
-    document.getElementById('btc-spark').textContent = spark(staticPts.btc);
-    document.getElementById('xmr-spark').textContent = spark(staticPts.xmr);
-
     async function prices() {
       try {
         const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,monero&vs_currencies=usd&include_24hr_change=true');
