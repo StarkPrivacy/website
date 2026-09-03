@@ -6,254 +6,255 @@
   <title>·</title>
   <meta name="robots" content="noindex, nofollow, noarchive">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#000;
-      --green:#00ff7f;
+      --bg:#05010a;
+      --panel:rgba(10,6,24,.55);
+      --line:rgba(0,229,255,.28);
       --cyan:#00e5ff;
       --magenta:#ff2bd6;
-      --muted:#3f6656;
+      --violet:#7a5cff;
+      --text:#eef2fb;
+      --muted:#93a0c2;
       --btc:#f7931a;
       --xmr:#ff6600;
-      --red:#ff3355;
-      --font:'Share Tech Mono','IBM Plex Mono',monospace;
+      --green:#00ff9d;
+      --red:#ff4d6a;
+      --font:'Share Tech Mono',ui-monospace,monospace;
+      --disp:'Orbitron',var(--font);
     }
     *{margin:0;padding:0;box-sizing:border-box}
     html,body{height:100%}
     body{
       font-family:var(--font);
       background:var(--bg);
-      color:#a9c9bb;
-      overflow-x:hidden;
-      min-height:100vh;
+      color:var(--text);
+      height:100dvh;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
     }
-    ::selection{background:var(--green);color:#000}
-    canvas#matrix{position:fixed;inset:0;z-index:0;opacity:.14}
-    .crt{
-      position:fixed;inset:0;pointer-events:none;z-index:100;
-      background:
-        radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,.8) 100%),
-        repeating-linear-gradient(0deg,transparent 0,transparent 2px,rgba(0,0,0,.32) 2px,rgba(0,0,0,.32) 4px);
-    }
-    .noise{
-      position:fixed;inset:0;pointer-events:none;z-index:99;opacity:.05;
-      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    }
-    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+    ::selection{background:var(--cyan);color:#000}
 
-    .wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:2.2rem 1.2rem 4rem}
+    /* cyberpunk backdrop: neon perspective grid + glow haze, no matrix/terminal roleplay */
+    .backdrop{position:fixed;inset:0;z-index:0;overflow:hidden}
+    .glow{position:absolute;border-radius:50%;filter:blur(70px);opacity:.35}
+    .glow.a{width:38vw;height:38vw;background:var(--magenta);top:-12vw;left:-8vw}
+    .glow.b{width:32vw;height:32vw;background:var(--cyan);bottom:-10vw;right:-6vw}
+    .grid-floor{
+      position:absolute;left:0;right:0;bottom:0;height:55%;
+      background-image:
+        linear-gradient(rgba(0,229,255,.35) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(0,229,255,.35) 1px,transparent 1px);
+      background-size:100% 7%, 6% 100%;
+      transform:perspective(280px) rotateX(58deg);
+      transform-origin:bottom;
+      opacity:.4;
+      mask-image:linear-gradient(to top,#000 20%,transparent 92%);
+    }
+    .scan{position:fixed;inset:0;z-index:50;pointer-events:none;
+      background:repeating-linear-gradient(0deg,transparent 0,transparent 2px,rgba(0,0,0,.22) 2px,rgba(0,0,0,.22) 4px);
+    }
+    .vig{position:fixed;inset:0;z-index:49;pointer-events:none;
+      background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.7) 100%);
+    }
 
-    .topbar{
-      display:flex;justify-content:space-between;align-items:center;
-      font-size:10px;letter-spacing:.16em;color:var(--muted);margin-bottom:1.8rem;
-    }
-    .topbar a{color:var(--muted);text-decoration:none}
-    .topbar a:hover{color:var(--cyan)}
-    .online{color:var(--green);text-shadow:0 0 8px var(--green)}
-    .online::before{content:"● ";animation:blink 1.4s infinite}
-
-    .banner{
-      font-size:clamp(1.3rem,5.5vw,1.9rem);letter-spacing:.08em;color:#eafff2;
-      text-transform:uppercase;font-weight:700;position:relative;display:inline-block;
-      margin-bottom:.3rem;
-    }
-    .banner::before,.banner::after{
-      content:attr(data-text);position:absolute;left:0;top:0;width:100%;overflow:hidden;pointer-events:none;
-    }
-    .banner::before{color:var(--cyan);clip-path:inset(0 0 55% 0);transform:translate(-2px,0);opacity:.9;animation:glA 2.6s infinite linear alternate-reverse;text-shadow:-2px 0 var(--cyan)}
-    .banner::after{color:var(--magenta);clip-path:inset(50% 0 0 0);transform:translate(2px,0);opacity:.85;animation:glB 2.1s infinite linear alternate-reverse;text-shadow:2px 0 var(--magenta)}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
     @keyframes glA{0%,86%,100%{transform:translate(0)}88%{transform:translate(-3px,1px)}92%{transform:translate(2px,-1px)}96%{transform:translate(-1px,0)}}
     @keyframes glB{0%,82%,100%{transform:translate(0)}84%{transform:translate(3px,-1px)}89%{transform:translate(-2px,1px)}94%{transform:translate(1px,0)}}
-    .banner-sub{font-size:10.5px;letter-spacing:.14em;color:var(--muted);margin-bottom:2rem}
 
-    #term{
-      font-size:13px;line-height:1.85;white-space:pre-wrap;word-break:break-word;
-      text-shadow:0 0 4px rgba(0,255,127,.15);
+    .stage{
+      position:relative;z-index:1;
+      height:100%;width:min(1180px,96vw);margin:0 auto;
+      display:flex;flex-direction:column;
+      padding:clamp(.6rem,2.2vh,1.4rem) clamp(.9rem,2.4vw,1.6rem);
+      gap:clamp(.5rem,1.6vh,1.1rem);
     }
-    .p{color:var(--muted)}
-    .c{color:var(--green)}
-    .c2{color:var(--cyan)}
-    .out{color:#c7e6d8;display:block;padding-left:1.1em}
-    .dim{color:var(--muted)}
+
+    .topbar{display:flex;justify-content:space-between;align-items:center;flex:0 0 auto}
+    .topbar a{color:var(--muted);text-decoration:none;font-size:clamp(10px,1.3vh,12px);letter-spacing:.14em}
+    .topbar a:hover{color:var(--cyan)}
+    .tag{font-size:clamp(9px,1.1vh,11px);letter-spacing:.22em;color:var(--cyan);border:1px solid var(--line);padding:.25em .8em;border-radius:999px;background:rgba(0,229,255,.06)}
+
+    .hero{flex:0 0 auto;text-align:center;padding:clamp(.2rem,1vh,.6rem) 0}
+    .eyebrow{font-size:clamp(10px,1.3vh,12px);letter-spacing:.3em;color:var(--muted);margin-bottom:.4em}
+    .title{
+      font-family:var(--disp);font-weight:800;text-transform:uppercase;
+      font-size:clamp(1.5rem,5.4vh,3rem);letter-spacing:.05em;line-height:1;
+      position:relative;display:inline-block;color:#fff;
+    }
+    .title::before,.title::after{content:attr(data-text);position:absolute;left:0;top:0;width:100%;overflow:hidden}
+    .title::before{color:var(--cyan);clip-path:inset(0 0 55% 0);transform:translate(-2px,0);opacity:.85;animation:glA 2.6s infinite linear alternate-reverse;text-shadow:0 0 18px var(--cyan)}
+    .title::after{color:var(--magenta);clip-path:inset(50% 0 0 0);transform:translate(2px,0);opacity:.8;animation:glB 2.1s infinite linear alternate-reverse;text-shadow:0 0 18px var(--magenta)}
+    .subtitle{margin-top:.5em;font-size:clamp(12px,1.6vh,14.5px);color:var(--muted);letter-spacing:.03em}
+
+    .main{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:1.3fr 1fr;gap:clamp(.6rem,1.8vw,1.2rem)}
+    @media (max-width:760px){.main{grid-template-columns:1fr;overflow-y:auto}}
+
+    .panel{
+      background:var(--panel);border:1px solid var(--line);border-radius:14px;
+      padding:clamp(.6rem,1.8vh,1.1rem) clamp(.7rem,1.6vw,1.2rem);
+      backdrop-filter:blur(6px);
+      display:flex;flex-direction:column;min-height:0;
+    }
+    .panel-head{
+      font-family:var(--disp);font-size:clamp(10px,1.3vh,12px);letter-spacing:.22em;
+      color:var(--cyan);text-shadow:0 0 10px rgba(0,229,255,.5);margin-bottom:clamp(.4rem,1.2vh,.7rem);
+      flex:0 0 auto;
+    }
+
+    .modules{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,1fr);gap:clamp(.4rem,1vh,.65rem)}
+    .mod{
+      border:1px solid rgba(255,255,255,.08);border-radius:10px;
+      padding:clamp(.4rem,1.1vh,.65rem) clamp(.5rem,1vw,.75rem);
+      background:linear-gradient(160deg,rgba(122,92,255,.10),rgba(0,229,255,.04));
+      display:flex;flex-direction:column;justify-content:center;gap:.15em;
+      transition:.2s;
+    }
+    .mod:hover{border-color:var(--cyan);box-shadow:0 0 16px rgba(0,229,255,.25)}
+    .mod-id{font-family:var(--disp);font-size:clamp(9px,1vh,10.5px);color:var(--magenta);letter-spacing:.1em}
+    .mod-name{font-weight:700;font-size:clamp(12px,1.55vh,14.5px);color:#fff;letter-spacing:.02em}
+    .mod-desc{font-size:clamp(10px,1.25vh,11.5px);color:var(--muted);line-height:1.3}
+
+    .side{display:flex;flex-direction:column;gap:clamp(.5rem,1.6vh,1rem);min-height:0}
+
+    .flow{display:flex;flex-direction:column;gap:clamp(.35rem,.9vh,.55rem);flex:0 0 auto}
+    .flow-row{display:flex;align-items:center;gap:.6em}
+    .flow-n{
+      font-family:var(--disp);font-size:clamp(10px,1.2vh,12px);color:#000;background:var(--cyan);
+      width:1.7em;height:1.7em;border-radius:50%;display:grid;place-items:center;flex:0 0 auto;
+      box-shadow:0 0 12px rgba(0,229,255,.6);
+    }
+    .flow-label{font-size:clamp(11px,1.4vh,13px);color:var(--text);letter-spacing:.03em}
+    .flow-line{width:1px;height:clamp(6px,1.2vh,10px);background:linear-gradient(var(--cyan),transparent);margin-left:.85em}
+
+    .ticker{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;gap:clamp(.5rem,1.4vh,.8rem)}
+    .coin{display:flex;justify-content:space-between;align-items:center;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:clamp(.45rem,1.2vh,.7rem) clamp(.6rem,1.2vw,.9rem);background:rgba(255,255,255,.02)}
+    .coin.btc{box-shadow:inset 3px 0 0 var(--btc)}
+    .coin.xmr{box-shadow:inset 3px 0 0 var(--xmr)}
+    .coin-name{font-size:clamp(9px,1.05vh,10.5px);letter-spacing:.16em;color:var(--muted);text-transform:uppercase}
+    .coin-price{font-family:var(--disp);font-size:clamp(15px,2vh,19px);font-weight:700}
+    .coin.btc .coin-price{color:var(--btc);text-shadow:0 0 10px rgba(247,147,26,.4)}
+    .coin.xmr .coin-price{color:var(--xmr);text-shadow:0 0 10px rgba(255,102,0,.4)}
+    .coin-chg{font-size:clamp(10px,1.2vh,12px);margin-left:.5em}
     .up{color:var(--green)}
     .down{color:var(--red)}
-    .btc-c{color:var(--btc)}
-    .xmr-c{color:var(--xmr)}
-    #term a{color:var(--cyan);text-decoration:underline}
-    #term .cur{display:inline-block;width:7px;height:1em;background:var(--green);margin-left:1px;vertical-align:-2px;animation:blink 1s steps(1) infinite}
+    .coin-spark{font-family:var(--disp);letter-spacing:1px;font-size:clamp(11px,1.4vh,14px);opacity:.85}
 
-    .skip-hint{position:fixed;bottom:1rem;left:0;right:0;text-align:center;font-size:9px;letter-spacing:.2em;color:var(--muted);z-index:5}
+    .note{flex:0 0 auto;text-align:center;font-size:clamp(10.5px,1.3vh,12px);color:var(--muted);line-height:1.5;letter-spacing:.02em}
+    .note b{color:var(--text);font-weight:600}
 
-    @media (prefers-reduced-motion:reduce){
-      *{animation-duration:.001s !important;animation-iteration-count:1 !important}
-      canvas#matrix{display:none}
-    }
+    @media (prefers-reduced-motion:reduce){ *{animation-duration:.001s !important} }
   </style>
 </head>
 <body>
-  <canvas id="matrix"></canvas>
-  <div class="noise"></div>
-  <div class="crt"></div>
+  <div class="backdrop">
+    <div class="glow a"></div>
+    <div class="glow b"></div>
+    <div class="grid-floor"></div>
+  </div>
+  <div class="vig"></div>
+  <div class="scan"></div>
 
-  <div class="wrap">
+  <div class="stage">
     <div class="topbar">
-      <a href="index.html">← disconnect</a>
-      <div class="online">CHANNEL OPEN</div>
+      <a href="index.html">← volver</a>
+      <span class="tag">ACCESO DIRECTO</span>
     </div>
 
-    <div class="banner" data-text="stark // ops">stark // ops</div>
-    <div class="banner-sub">build 0x07 · acceso por invitación</div>
+    <div class="hero">
+      <div class="eyebrow">canal privado · sin intermediarios</div>
+      <div class="title" data-text="Servicios">Servicios</div>
+      <div class="subtitle">Formación y auditoría a medida. Se define el alcance antes de nada.</div>
+    </div>
 
-    <pre id="term"></pre>
-    <div class="skip-hint" id="skip-hint">pulsa cualquier tecla para omitir</div>
+    <div class="main">
+      <div class="panel">
+        <div class="panel-head">módulos disponibles</div>
+        <div class="modules">
+          <div class="mod"><div class="mod-id">01</div><div class="mod-name">Threat Model</div><div class="mod-desc">Superficie de ataque: quién y por dónde.</div></div>
+          <div class="mod"><div class="mod-id">02</div><div class="mod-name">Hardening</div><div class="mod-desc">Sistemas, hábitos, setup real.</div></div>
+          <div class="mod"><div class="mod-id">03</div><div class="mod-name">Comunicaciones seguras</div><div class="mod-desc">Canales resistentes a vigilancia.</div></div>
+          <div class="mod"><div class="mod-id">04</div><div class="mod-name">Revisión OPSEC</div><div class="mod-desc">Fugas actuales y cómo cortarlas.</div></div>
+          <div class="mod"><div class="mod-id">05</div><div class="mod-name">Identidad</div><div class="mod-desc">Huella pública, separación de contextos.</div></div>
+          <div class="mod"><div class="mod-id">06</div><div class="mod-name">A medida</div><div class="mod-desc">Lo que haga falta, se define en privado.</div></div>
+        </div>
+      </div>
+
+      <div class="side">
+        <div class="panel">
+          <div class="panel-head">cómo funciona</div>
+          <div class="flow">
+            <div class="flow-row"><div class="flow-n">1</div><div class="flow-label">Contacto</div></div>
+            <div class="flow-line"></div>
+            <div class="flow-row"><div class="flow-n">2</div><div class="flow-label">Se define el alcance</div></div>
+            <div class="flow-line"></div>
+            <div class="flow-row"><div class="flow-n">3</div><div class="flow-label">Anticipo</div></div>
+            <div class="flow-line"></div>
+            <div class="flow-row"><div class="flow-n">4</div><div class="flow-label">Ejecución</div></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">pago · BTC / XMR</div>
+          <div class="ticker">
+            <div class="coin btc">
+              <div>
+                <div class="coin-name">Bitcoin</div>
+                <div><span class="coin-price" id="btc">···</span><span class="coin-chg" id="btc-c"></span></div>
+              </div>
+              <div class="coin-spark" id="btc-spark"></div>
+            </div>
+            <div class="coin xmr">
+              <div>
+                <div class="coin-name">Monero</div>
+                <div><span class="coin-price" id="xmr">···</span><span class="coin-chg" id="xmr-c"></span></div>
+              </div>
+              <div class="coin-spark" id="xmr-spark"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="note"><b>Sin paquetes. Sin intermediarios. Sin registros.</b> Solo si el alcance está claro.</p>
   </div>
 
   <script>
-    // matrix rain
-    (function(){
-      const cv=document.getElementById('matrix');
-      const ctx=cv.getContext('2d');
-      let w,h,cols,drops;
-      const glyphs='アイウエオカキクケコサシスセソ0123456789ABCDEF$#%&';
-      function setup(){
-        w=cv.width=innerWidth; h=cv.height=innerHeight;
-        cols=Math.floor(w/16);
-        drops=Array(cols).fill(0).map(()=>Math.random()*-40);
-      }
-      setup();
-      window.addEventListener('resize',setup);
-      const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if(!reduce){
-        setInterval(()=>{
-          ctx.fillStyle='rgba(0,0,0,.09)';
-          ctx.fillRect(0,0,w,h);
-          ctx.fillStyle='#00ff7f';
-          ctx.font='14px monospace';
-          drops.forEach((y,i)=>{
-            const ch=glyphs[Math.floor(Math.random()*glyphs.length)];
-            ctx.fillText(ch,i*16,y*16);
-            if(y*16>h && Math.random()>.975) drops[i]=0;
-            drops[i]++;
-          });
-        },45);
-      }
-    })();
-
-    // live BTC/XMR (fetched once, spliced into the transcript before it prints)
     function spark(pts){
       const chars='▁▂▃▄▅▆▇█';
       return pts.map(p=>chars[Math.min(7,Math.floor(p*8))]).join('');
     }
-    const sid = '0x'+Math.random().toString(16).slice(2,10).toUpperCase();
+    const staticPts = {
+      btc:[0.38,0.44,0.41,0.49,0.47,0.54,0.51,0.57,0.59,0.56,0.62,0.65],
+      xmr:[0.48,0.45,0.51,0.47,0.43,0.49,0.46,0.53,0.5,0.56,0.54,0.59]
+    };
+    document.getElementById('btc-spark').textContent = spark(staticPts.btc);
+    document.getElementById('xmr-spark').textContent = spark(staticPts.xmr);
 
-    async function getPrices(){
-      const fallback = {
-        btc:{price:'…',chg:0,pts:[0.38,0.44,0.41,0.49,0.47,0.54,0.51,0.57,0.59,0.56,0.62,0.65]},
-        xmr:{price:'…',chg:0,pts:[0.48,0.45,0.51,0.47,0.43,0.49,0.46,0.53,0.5,0.56,0.54,0.59]}
-      };
-      try{
-        const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,monero&vs_currencies=usd&include_24hr_change=true');
-        const d=await r.json();
-        if(d.bitcoin) fallback.btc={price:'$'+Math.round(d.bitcoin.usd).toLocaleString(),chg:d.bitcoin.usd_24h_change||0,pts:fallback.btc.pts};
-        if(d.monero) fallback.xmr={price:'$'+d.monero.usd.toFixed(1),chg:d.monero.usd_24h_change||0,pts:fallback.xmr.pts};
-      }catch(e){}
-      return fallback;
-    }
-
-    function fmtChg(c){
-      const sign=c>=0?'+':'';
-      const cls=c>=0?'up':'down';
-      return '<span class="'+cls+'">'+sign+c.toFixed(1)+'%</span>';
-    }
-
-    (async function boot(){
-      const prices = await getPrices();
-      const term = document.getElementById('term');
-      const skipHint = document.getElementById('skip-hint');
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      const script = [
-        {p:'guest@stark',c:'~$ ',cmd:'ssh node --identity=0x0732E79E'},
-        {out:'negociando handshake sobre Tor ... <span class="up">OK</span>'},
-        {out:'montando canal cifrado ... <span class="up">OK</span>'},
-        {out:'sesión <b>'+sid+'</b> · acceso: <span class="up">GRANTED</span>'},
-        {blank:true},
-        {p:'guest@stark',c:'~$ ', cmd:'cat manifiesto.txt'},
-        {out:'Sin paquetes. Sin intermediarios. Sin registros.'},
-        {out:'Esto no es una tienda, es un canal.'},
-        {out:'Si el alcance está claro, se ejecuta. Si no, no hay conversación.'},
-        {blank:true},
-        {p:'guest@stark',c:'~$ ', cmd:'cat modulos.list'},
-        {out:'[0x01] THREAT_MODEL    <span class="dim">superficie de ataque · quién y por dónde</span>'},
-        {out:'[0x02] HARDENING       <span class="dim">sistemas · hábitos · setup real</span>'},
-        {out:'[0x03] SECURE_COMMS    <span class="dim">canales resistentes a vigilancia</span>'},
-        {out:'[0x04] OPSEC_REVIEW    <span class="dim">fugas actuales · cómo cortarlas</span>'},
-        {out:'[0x05] IDENTITY        <span class="dim">huella pública · separación de contextos</span>'},
-        {out:'[0x06] CUSTOM          <span class="dim">lo que haga falta · se define en privado</span>'},
-        {blank:true},
-        {p:'guest@stark',c:'~$ ', cmd:'./engage.sh --flow'},
-        {out:'[01] contacto <span class="dim">&gt;&gt;</span> [02] alcance <span class="dim">&gt;&gt;</span> [03] anticipo <span class="dim">&gt;&gt;</span> [04] ejecución'},
-        {blank:true},
-        {p:'guest@stark',c:'~$ ', cmd:'watch payment_channels.sh'},
-        {out:'BTC  <span class="btc-c">'+prices.btc.price+'</span>  '+spark(prices.btc.pts)+'  '+fmtChg(prices.btc.chg)},
-        {out:'XMR  <span class="xmr-c">'+prices.xmr.price+'</span>  '+spark(prices.xmr.pts)+'  '+fmtChg(prices.xmr.chg)},
-        {blank:true},
-        {out:'<span class="dim">NOINDEX · NO LOGS · NO TRACE</span>'}
-      ];
-
-      function renderInstant(){
-        let html='';
-        script.forEach(l=>{
-          if(l.blank){ html+='\n'; return; }
-          if(l.cmd!==undefined){ html+='<span class="p">'+l.p+'</span><span class="c2">'+l.c+'</span><span class="c">'+l.cmd+'</span>\n'; }
-          else { html+='<span class="out">'+l.out+'</span>\n'; }
-        });
-        html+='<span class="cur"></span>';
-        term.innerHTML=html;
-        skipHint.style.display='none';
-      }
-
-      if(reduce){ renderInstant(); return; }
-
-      let i=0;
-      let done=false;
-      function finish(){
-        if(done) return;
-        done=true;
-        renderInstant();
-      }
-      window.addEventListener('keydown',finish,{once:true});
-      document.addEventListener('click',finish,{once:true});
-
-      async function typeLine(li){
-        const l=script[li];
-        if(l.blank){ term.innerHTML+='\n'; return; }
-        if(l.cmd!==undefined){
-          term.innerHTML+='<span class="p">'+l.p+'</span><span class="c2">'+l.c+'</span><span class="c" id="typing"></span><span class="cur"></span>';
-          const target=document.getElementById('typing');
-          for(let ch=0; ch<=l.cmd.length; ch++){
-            if(done) return;
-            target.textContent=l.cmd.slice(0,ch);
-            await new Promise(r=>setTimeout(r,16+Math.random()*20));
-          }
-          document.querySelector('#term .cur')?.remove();
-          term.innerHTML+='\n';
-        } else {
-          term.innerHTML+='<span class="out">'+l.out+'</span>\n';
-          await new Promise(r=>setTimeout(r,90));
+    async function prices() {
+      try {
+        const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,monero&vs_currencies=usd&include_24hr_change=true');
+        const d = await r.json();
+        const b = d.bitcoin, x = d.monero;
+        if (b) {
+          document.getElementById('btc').textContent = '$' + Math.round(b.usd).toLocaleString();
+          const c = b.usd_24h_change || 0;
+          const el = document.getElementById('btc-c');
+          el.textContent = (c >= 0 ? '+' : '') + c.toFixed(1) + '%';
+          el.className = 'coin-chg ' + (c >= 0 ? 'up' : 'down');
         }
-      }
-
-      for(i=0; i<script.length; i++){
-        if(done){ renderInstant(); break; }
-        await typeLine(i);
-      }
-      if(!done){
-        term.innerHTML+='<span class="cur"></span>';
-        skipHint.style.display='none';
-      }
-    })();
+        if (x) {
+          document.getElementById('xmr').textContent = '$' + x.usd.toFixed(1);
+          const c = x.usd_24h_change || 0;
+          const el = document.getElementById('xmr-c');
+          el.textContent = (c >= 0 ? '+' : '') + c.toFixed(1) + '%';
+          el.className = 'coin-chg ' + (c >= 0 ? 'up' : 'down');
+        }
+      } catch (e) {}
+    }
+    prices();
   </script>
 </body>
 </html>
